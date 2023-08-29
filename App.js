@@ -3,33 +3,57 @@ import { View, Text, ImageBackground, TouchableOpacity, StyleSheet } from 'react
 import SimpleSvgComponent from './components/SimpleSvgComponent';
 
 
-export default function App() {
-  const [svgColor, setSvgColor] = useState('#ffff00');
-  const [SVGdim, setSVGdim] = useState(200);
-  const [yCoordinate, setYCoordinate] = useState(0); // Change the state name to setYCoordinate
-
+export default function App() { 
+  [svgColor, setSvgColor] = useState('yellow');
+  
+  const StartValueRadiusSVG = 15 ;
+  const max_value_radius = StartValueRadiusSVG + (Math.round(StartValueRadiusSVG * 0.33) * 2);
+  const min_value_radius = StartValueRadiusSVG - (Math.round(StartValueRadiusSVG * 0.33) * 2);
+    
+  [RadiusSVG, setRadiusSVG] = useState(StartValueRadiusSVG); 
+  [yCoordinate, setYCoordinate] = useState(50); 
+    
   const changeColor = () => {
-    const listColors = ['#ff110f', '#ff00ff', '#0000ff', '#ffffff', '#ffff00', '#f1035f'];
+                     {/*  a     green=e        i         o      u   */}
+    listColors = ['red', '#085708', 'blue', 'orange', '#696969'];
     const randomIndex = Math.floor(Math.random() * listColors.length);
     setSvgColor(listColors[randomIndex]);
   };
-  
-  const increaseSize = () => {
-    setSVGdim(SVGdim + 10);
-  };
 
-  const decreaseSize = () => {
-    if (SVGdim > 10) {
-      setSVGdim(SVGdim - 10);
+  const increaseSize = () => {   
+    if (RadiusSVG < max_value_radius) {
+      setRadiusSVG(RadiusSVG + Math.round(StartValueRadiusSVG * 0.33));
+    }
+    else {
+      setRadiusSVG(RadiusSVG);
     }
   };
 
+  const decreaseSize = () => {
+    if (RadiusSVG > min_value_radius) {
+      setRadiusSVG(RadiusSVG - Math.round(StartValueRadiusSVG * 0.33));
+    }
+    else {
+      setRadiusSVG(RadiusSVG);
+    }
+  };
+  
   const goingUp = () => {
-    setYCoordinate(yCoordinate - 10); 
+    if (yCoordinate>20){
+      setYCoordinate(yCoordinate - 15);
+    }
+    else{
+      setYCoordinate(yCoordinate);
+    }
   };
 
   const goingDown = () => {
-    setYCoordinate(yCoordinate + 10);
+    if (yCoordinate < 80) {
+      setYCoordinate(yCoordinate + 15);
+    }
+    else {
+      setYCoordinate(yCoordinate);
+    }
   };
 
   return (
@@ -38,8 +62,13 @@ export default function App() {
         source={require('./img/bg.jpeg')}
         style={styles.backgroundImage}
       >
-        <View style={styles.content}>
-          <SimpleSvgComponent svgColor={svgColor} width={SVGdim} height={SVGdim} yCoordinate={yCoordinate} />          
+        <View style={{
+          width: '100%',
+          height: '100%',
+          justifyContent: 'space-around'
+        }}
+        >
+          <SimpleSvgComponent svgColor={svgColor} rad={RadiusSVG} yCoordinate={yCoordinate} />
         </View>
       </ImageBackground>
       
