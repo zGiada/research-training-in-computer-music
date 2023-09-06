@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, ImageBackground, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, ImageBackground, TouchableOpacity } from 'react-native';
 import SimpleSvgComponent from './components/SimpleSvgComponent';
 import { styles } from "./Style";
 
 
-export default function App() { 
+export default function App() {  
+  
   [svgColor, setSvgColor] = useState('yellow');
   
   const StartValueRadiusSVG = 15 ;
@@ -13,9 +14,11 @@ export default function App() {
     
   [RadiusSVG, setRadiusSVG] = useState(StartValueRadiusSVG); 
   [yCoordinate, setYCoordinate] = useState(50); 
+
+  
     
   const changeColor = () => {
-                     {/*  a     green=e        i         o      u   */}
+              {/*  a     green=e       i        o         u   */}
     listColors = ['red', '#085708', 'blue', 'orange', '#696969'];
     const randomIndex = Math.floor(Math.random() * listColors.length);
     setSvgColor(listColors[randomIndex]);

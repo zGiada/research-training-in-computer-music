@@ -1,4 +1,6 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+
+const { width: DEVICE_WIDTH, height: DEVICE_HEIGHT } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
 
@@ -25,7 +27,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-around', // Evenly distribute buttons
         alignItems: 'center', // Center the buttons vertically
         backgroundColor: '#333', // Navbar background color
-        height: 150, // Adjust the height as needed
+        height: DEVICE_HEIGHT/5, // Adjust the height as needed
         position: 'absolute',
         bottom: 0, // Fixed to the bottom
         left: 0,

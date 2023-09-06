@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Image } from 'react-native';
 import Svg, { Circle, Text } from 'react-native-svg';
 
 const SimpleSvgComponent = ({ svgColor, rad, yCoordinate }) => {
@@ -14,7 +14,6 @@ const SimpleSvgComponent = ({ svgColor, rad, yCoordinate }) => {
 };
 
 export default SimpleSvgComponent;
-
 
 {/*
 <Path
