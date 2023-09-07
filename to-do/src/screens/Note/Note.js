@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
+import GlobalFooter from '../Footers/GlobalFooter';
+import GlobalHeader from '../Headers/GlobalHeader';
+import Constants from 'expo-constants';
 
 export default function Note({ navigation, AppState }) {
     const { note } = AppState;
@@ -11,8 +14,12 @@ export default function Note({ navigation, AppState }) {
 
     return (
         <View style={styles.screen}>
+            <GlobalHeader />
+            <View style={styles.body}>
             <Text>Note Title: {note.noteTitle}</Text>
             <Text>Note Text: {note.noteText}</Text>
+            </View>
+            <GlobalFooter AppState={AppState} navigation={navigation}></GlobalFooter>
         </View>
     );
 }
@@ -21,11 +28,13 @@ const styles = StyleSheet.create({
     screen: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        paddingTop: Constants.statusBarHeight
     },
-    button: {
-        margin: 20,
-        padding: 20,
-        borderWidth: 3
+    body: {
+        flex: 8, justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%'
     }
 })

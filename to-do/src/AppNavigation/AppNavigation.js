@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import Home from '../screens/AllNotes/AllNotes';
 
 import AllNotes from '../screens/AllNotes/AllNotes';
 import Note from '../screens/Note/Note';
@@ -14,15 +13,15 @@ export default function AppNavigation({AppState}) {
         <NavigationContainer>
             <Stack.Navigator>
                                                 {/*options={{headerShown: false}}*/}
-                <Stack.Screen name="All My Notes" >
+                <Stack.Screen name="AllNotes" options={{ headerShown: false }}>
                     {props => <AllNotes {...props} AppState={AppState} />}
                 </Stack.Screen>
 
-                <Stack.Screen name="Note" >
+                <Stack.Screen name="Note" options={{ headerShown: false }}>
                     {props => <Note {...props} AppState={AppState} />}
                 </Stack.Screen>
 
-                <Stack.Screen name="Create Note" >
+                <Stack.Screen name="CreateNote" options={{ headerShown: false }}>
                     {props => <CreateNote {...props} AppState={AppState} />}
                 </Stack.Screen>
 

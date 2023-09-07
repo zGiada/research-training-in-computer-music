@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import AppNavigation from '../AppNavigation/AppNavigation'
+import AppNavigation from '../AppNavigation/AppNavigation';
 
 export default function AppState(){
     const [allNotes, setAllNotes] = useState([{ noteID: 1, noteTitle: 'Item1', noteText: 'First lab' }, { noteID: 2, noteTitle: 'Item2', noteText:'idk'}])
