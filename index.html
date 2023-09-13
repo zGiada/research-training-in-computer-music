@@ -12,17 +12,22 @@
 "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!--<script src="microphone.js"></script>-->
     <script src="script.js"></script>
+
 </head>
 
-<body onload="main()">
+<body>
     <div class="container">
         <div class="title">
             <h1>Microphone Audio Visualization</h1><br>
-            <p>Analyzed Frequency: <span id="frequency"></span></p>
+            <p>Analyzed Frequency: <span id="pitch">--</span> Hz</p>
         </div>
-        <button id="toggleButton"><span id="icon"></span> START </button>
+    <button id="startButton"> START </button>
+    <button id="stopButton" > STOP </button>
+        <!--
         <canvas id="myCanvas"></canvas>
+        -->
     </div>
+    
 </body>
 
 </html>

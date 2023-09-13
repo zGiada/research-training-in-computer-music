@@ -19,7 +19,7 @@ body::before {
     right: 0px;
     bottom: 0px;
     left: 0px;
-    background-color: rgba(40,41,43, 0.7);
+    background-color: rgba(40,41,43, 0.8);
 }
 
 canvas {
@@ -41,9 +41,11 @@ canvas {
     text-align: center;
 }
 
-button {
+input, button {
     margin-bottom: 5%;
     padding: 2%;
     width: 25%;
     border-radius: 10px;
+    background-color: whitesmoke;
+    cursor: pointer;
 }

@@ -1,175 +1,163 @@
-let microphone;
-class Microphone {
-    constructor() {
-        this.initialized = false;
-        /* navigator.mediaDevices ↓ is a read only property that returns a builtin MD obj which provides access to connected media input devices such as microphone */
-        /* getUserMedia returns a *promise* that resolves in a media stream object which contains microphone audio data */
-        /* *promise* is a special JS obj that represents eventual completion of asynchronus operation. 
-            = to use when we want to wait for something to complete before we run some follow-up code */
-        navigator.mediaDevices.getUserMedia({
-            audio: {
-                "mandatory": {
-                    "googEchoCancellation": "false",
-                    "googAutoGainControl": "false",
-                    "googNoiseSuppression": "false",
-                    "googHighpassFilter": "false"
-                },
-                "optional": []
+window.AudioContext = window.AudioContext || window.webkitAudioContext;
+
+var audioContext = null;
+var analyser = null;
+var mediaStreamSource = null;
+var rafID = null;
+var buflen = 2048;
+var buf = new Float32Array(buflen);
+var pitchElem;
+
+function setAudio() {
+    audioContext = new AudioContext();
+    // Attempt to get audio input
+    navigator.mediaDevices.getUserMedia({
+        "audio": {
+            "mandatory": {
+                "googEchoCancellation": "false",
+                "googAutoGainControl": "false",
+                "googNoiseSuppression": "false",
+                "googHighpassFilter": "false"
             },
-        }) // audio node
-            .then(function (stream) {
-                /* new AudioContext() => Web Audio API is a set of methods and properties that allow us to generate, play and analyse audio */
-                /* Web Audio API methods allow us to process and synthesise audio directly inside browser. We can do mixing, processing and filtering tasks on sound */
-                this.audioContext = new AudioContext();
-                /* createMediaStreamSource => takes raw media stream (raw audio data from microphone) and converts it into audio nodes */
-                this.microphone = this.audioContext.createMediaStreamSource(stream);
-                /* createAnalyser => creates analyser node which can be used to expose audio time and frequency data to create visualisations */
-                this.analyser = this.audioContext.createAnalyser();
-                this.analyser.fftSize = 2048; // Fast Fourier Transform
-                /* frequencyBinCount => is a read only property and it's always equal to half of fftSize value*/
-                const bufferLength = this.analyser.frequencyBinCount;
-                this.dataArray = new Uint8Array(bufferLength);
-                /* connect => allows us to direct data from one audio node to another */
-                this.microphone.connect(this.analyser);
-                this.initialized = true;
+            "optional": []
+        },
+    })
+        .then((stream) => {
+            // Create an AudioNode from the stream.
+            mediaStreamSource = audioContext.createMediaStreamSource(stream);
 
+            // Connect it to the destination.
+            analyser = audioContext.createAnalyser();
+            analyser.fftSize = 2048;
+            mediaStreamSource.connect(analyser);
 
-            }.bind(this)).catch(function (err) {
-                alert(err);
-            })
-    }
-
-
-    getFrequencyData() {
-        this.analyser.getByteFrequencyData(this.dataArray);
-        const maxMagnitude = Math.max(...this.dataArray);
-        const maxIndex = this.dataArray.indexOf(maxMagnitude);
-        const nyquist = this.audioContext.sampleRate / 2;
-        const frequencyHz = (maxIndex / this.analyser.frequencyBinCount) * nyquist;
-        return frequencyHz.toFixed(2);
-    }
-
-    getSamples() {
-        /* getByteTimeDomainData => copies the current waveform or time domain data into an Uint8Array array we pass to it */
-        this.analyser.getByteTimeDomainData(this.dataArray);
-        let normSamples = [...this.dataArray].map(e => e / 128 - 1);
-        return normSamples;
-    }
-    getSoundIntensity() {
-        this.analyser.getByteTimeDomainData(this.dataArray);
-        let normSamples = [...this.dataArray].map(e => e / 128 - 1);
-        /* Use Root Mean Square RMS: is a measure of the magnitude of a set of numbers. It gives a sense for the typical size of the numbers. */
-        let sum = 0;
-        for (let i = 0; i < normSamples.length; i++) {
-            sum += normSamples[i] * normSamples[i];
-        }
-        let volume = Math.sqrt(sum / normSamples.length);
-        return volume;
-    }
-    stopListening() {
-        if (this.mediaStream) {
-            this.mediaStream.getTracks().forEach((track) => track.stop());
-        }
-        if (this.audioContext && this.audioContext.state !== 'closed') {
-            this.audioContext.close().then(() => {
-                this.initialized = false;
-            });
-        }
-    }
-
+            // Now that the audio context and analyzer are initialized,
+            // you can start listening.
+            startListening();
+        })
+        .catch((err) => {
+            // always check for errors at the end.
+            console.error(`${err.name}: ${err.message}`);
+        });
 }
-class Bar {
-    constructor(x, y, width, height, color) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        this.color = color;
-    }
-    update(micInput) {
-        this.height = micInput * 1000;
-        //this.x++;
-    }
-    draw(context) {
-        context.fillStyle = this.color;
-        context.fillRect(this.x, this.y, this.width, this.height);
-    }
-}
-function main() {
-    const canvas = document.getElementById("myCanvas");
-    const ctx = canvas.getContext("2d");
-    canvas.width = window.innerWidth / 2;
-    canvas.height = window.innerHeight / 2;
-    let isListening = false;
 
-    if (!isListening) {
-        document.getElementById("frequency").textContent = "none";
-        //document.getElementById("icon").innerHTML = '<i class="fa fa-play-circle"></i>';
+function setFrequency(buf, sampleRate) {
+    // Implements the ACF2+ algorithm
+    var SIZE = buf.length;
+    var rms = 0;
+
+    for (var i = 0; i < SIZE; i++) {
+        var val = buf[i];
+        rms += val * val;
+    }
+    rms = Math.sqrt(rms / SIZE);
+
+    if (rms < 0.01) {// not enough signal
+        console.log(rms);
+        return -1;
     }
 
+    var r1 = 0, r2 = SIZE - 1, thres = 0.2;
+    for (var i = 0; i < SIZE / 2; i++)
+        if (Math.abs(buf[i]) < thres) { r1 = i; break; }
+    for (var i = 1; i < SIZE / 2; i++)
+        if (Math.abs(buf[SIZE - i]) < thres) { r2 = SIZE - i; break; }
 
+    buf = buf.slice(r1, r2);
+    SIZE = buf.length;
 
-    const toggleButton = document.getElementById("toggleButton");
-    toggleButton.addEventListener("click", toggleMicrophone);
+    var c = new Array(SIZE).fill(0);
+    for (var i = 0; i < SIZE; i++)
+        for (var j = 0; j < SIZE - i; j++)
+            c[i] = c[i] + buf[j] * buf[j + i];
 
-    function toggleMicrophone() {
-        if (!isListening) {
-            microphone = new Microphone();
-            let bars = [];
-            let barWidth = canvas.width / 256;
-
-
-
-            function createBars() {
-                for (let i = 0; i < 256; i++) {
-                    let color = 'hsl(' + i + ', 100%, 50%)';
-                    bars.push(new Bar(i * barWidth, canvas.height / 2, 1, 5, color));
-                }
-            }
-            createBars();
-
-
-
-            function animate() {
-                if (microphone.initialized) {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    // generates audio samples from micro
-                    const samples = microphone.getSamples();
-
-                    const intensity = microphone.getSoundIntensity();
-                    const frq = microphone.getFrequencyData();
-
-                    frequencyDisplay = document.getElementById("frequency");
-                    frequencyDisplay.textContent = frq;
-
-                    // animate bars based on microphone data
-                    bars.forEach(function (bar, i) {
-                        bar.update(samples[i]);
-                        bar.draw(ctx);
-                    });
-                }
-
-                requestAnimationFrame(animate);
-
-
-            }
-            animate();
-            toggleButton.textContent = "STOP";
-            //document.getElementById("icon").innerHTML = '<i class="fa fa-stop-circle"></i>';
-            isListening = true;
-
-        }
-        else {
-            if (microphone) {
-                microphone.stopListening();
-            }
-            toggleButton.textContent = "START";
-            //document.getElementById("icon").innerHTML = '<i class="fa fa-play-circle"></i>';
-            isListening = false;
-            document.getElementById("frequency").textContent = "none";
+    var d = 0; while (c[d] > c[d + 1]) d++;
+    var maxval = -1, maxpos = -1;
+    for (var i = d; i < SIZE; i++) {
+        if (c[i] > maxval) {
+            maxval = c[i];
+            maxpos = i;
         }
     }
+    var T0 = maxpos;
 
+    var x1 = c[T0 - 1], x2 = c[T0], x3 = c[T0 + 1];
+    a = (x1 + x3 - 2 * x2) / 2;
+    b = (x3 - x1) / 2;
+    if (a) T0 = T0 - b / (2 * a);
 
+    return sampleRate / T0;
 }
-window.addEventListener("load", main);
+
+
+function startListening() {
+    if (!analyser) {
+        console.error("Analyser not initialized.");
+        return;
+    }
+
+    analyser.getFloatTimeDomainData(buf);
+    var ac = setFrequency(buf, audioContext.sampleRate);
+
+    if (ac == -1) {
+        pitchElem.innerText = "--";
+    } else {
+        pitch = ac;
+        pitchElem.innerText = Math.round(pitch);
+    }
+
+    if (!window.requestAnimationFrame)
+        window.requestAnimationFrame = window.webkitRequestAnimationFrame;
+    rafID = window.requestAnimationFrame(startListening);
+}
+
+function stopListening() {
+    if (audioContext) {
+        // Disconnect the mediaStreamSource from the analyser
+        mediaStreamSource.disconnect(analyser);
+
+        // Close the audio context
+        audioContext.close().then(function () {
+            audioContext = null;
+            analyser = null;
+            mediaStreamSource = null;
+            console.log("Microphone stopped.");
+            pitchElem.innerText = "--";
+        }).catch(function (err) {
+            console.error("Error stopping microphone:", err);
+        });
+    }
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const stopB = document.getElementById('stopButton');
+    stopB.style.backgroundColor = 'gray';
+    stopB.disabled = true;
+    stopB.style.cursor = "not-allowed";
+    pitchElem = document.getElementById("pitch");
+
+    // Add event listeners to the buttons
+    document.getElementById("startButton").addEventListener("click", function () {
+        setAudio();
+        const startB = document.getElementById('startButton');
+        const stopB = document.getElementById('stopButton');
+        startB.style.backgroundColor = 'gray';
+        stopB.style.backgroundColor = 'whitesmoke';
+        startB.disabled = true;
+        startB.style.cursor = "not-allowed";
+        stopB.style.cursor = "pointer";
+        stopB.disabled = false;
+    });
+
+    document.getElementById("stopButton").addEventListener("click", function () {
+        stopListening();
+        const startB = document.getElementById('startButton');
+        const stopB = document.getElementById('stopButton');
+        startB.style.backgroundColor = 'whitesmoke';
+        stopB.style.backgroundColor = 'gray';
+        startB.disabled = false;
+        stopB.disabled = true;
+        stopB.style.cursor = "not-allowed";
+        startB.style.cursor = "pointer";
+    });
+});
