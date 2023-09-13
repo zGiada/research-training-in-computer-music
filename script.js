@@ -7,6 +7,10 @@ var rafID = null;
 var buflen = 2048;
 var buf = new Float32Array(buflen);
 var pitchElem;
+var noteElem;
+
+var noteStrings = ["C", "C#/Db", "D", "D#/Eb", "E", "F", "F#/Gb", "G", "G#/Ab", "A", "A#/Bb", "B"];
+
 
 function setAudio() {
     audioContext = new AudioContext();
@@ -41,6 +45,18 @@ function setAudio() {
         });
 }
 
+function noteFromPitch(frequency) {
+    var noteNum = 12 * (Math.log(frequency / 440) / Math.log(2));
+    return Math.round(noteNum) + 69;
+}
+
+function frequencyFromNoteNumber(note) {
+    return 440 * Math.pow(2, (note - 69) / 12);
+}
+
+function centsOffFromPitch(frequency, note) {
+    return Math.floor(1200 * Math.log(frequency / frequencyFromNoteNumber(note)) / Math.log(2));
+}
 function setFrequency(buf, sampleRate) {
     // Implements the ACF2+ algorithm
     var SIZE = buf.length;
@@ -101,11 +117,13 @@ function startListening() {
 
     if (ac == -1) {
         pitchElem.innerText = "--";
+        noteElem.innerText = "--";
     } else {
         pitch = ac;
         pitchElem.innerText = Math.round(pitch);
     }
-
+    var note = noteFromPitch(pitch);
+    noteElem.innerHTML = noteStrings[note % 12];
     if (!window.requestAnimationFrame)
         window.requestAnimationFrame = window.webkitRequestAnimationFrame;
     rafID = window.requestAnimationFrame(startListening);
@@ -123,6 +141,7 @@ function stopListening() {
             mediaStreamSource = null;
             console.log("Microphone stopped.");
             pitchElem.innerText = "--";
+            noteElem.innerText = "--";
         }).catch(function (err) {
             console.error("Error stopping microphone:", err);
         });
@@ -134,7 +153,9 @@ document.addEventListener("DOMContentLoaded", function () {
     stopB.style.backgroundColor = 'gray';
     stopB.disabled = true;
     stopB.style.cursor = "not-allowed";
+
     pitchElem = document.getElementById("pitch");
+    noteElem = document.getElementById("note");
 
     // Add event listeners to the buttons
     document.getElementById("startButton").addEventListener("click", function () {

@@ -27,12 +27,20 @@ canvas {
     border: 6px solid gray;
 }
 
-.title {
-    color: whitesmoke;
+h1 {
     text-transform: uppercase;
     margin-bottom: 5%;
 }
 
+.title, p{
+    margin-bottom: 2%;
+    color: whitesmoke;
+}
+
+.title {
+    margin-bottom: 10%;
+    color: whitesmoke;
+}
 .container {
     position: absolute;
     top: 50%;
