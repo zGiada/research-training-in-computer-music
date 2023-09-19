@@ -7,21 +7,18 @@
 
 body {
     overflow: hidden;
-    background-image: url("/micro.jpg");
-    
-    background-size: cover;
+    background: -webkit-gradient(linear, left top, left bottom, from(#242424), to(#a70505)) fixed;
 }
 
-body::before {
-    content: "";
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    bottom: 0px;
-    left: 0px;
-    background-color: rgba(40,41,43, 0.8);
+.grid-container {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    margin: 50px;
 }
-
+.grid-item {
+    padding: 30px;
+    text-align: center;
+}
 canvas {
     background-color: #242424;
     border: 6px solid gray;
@@ -35,6 +32,7 @@ h1 {
 .title, p{
     margin-bottom: 2%;
     color: whitesmoke;
+    font-size: 18px;
 }
 
 .title {
@@ -51,9 +49,8 @@ h1 {
 
 input, button {
     margin-bottom: 5%;
-    padding: 2%;
+    padding: 4%;
     width: 25%;
     border-radius: 10px;
-    background-color: whitesmoke;
     cursor: pointer;
 }

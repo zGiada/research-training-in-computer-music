@@ -69,7 +69,7 @@ function setFrequency(buf, sampleRate) {
     rms = Math.sqrt(rms / SIZE);
 
     if (rms < 0.01) {// not enough signal
-        console.log(rms);
+        //console.log("rms: "+rms);
         return -1;
     }
 
@@ -105,25 +105,36 @@ function setFrequency(buf, sampleRate) {
     return sampleRate / T0;
 }
 
+function getVolume(buf) {
+    let sumSquares = 0.0;
+    for (const amplitude of buf) { sumSquares += amplitude * amplitude; }
+    var volumeMeterEl = Math.sqrt(sumSquares / buf.length);
+    return (volumeMeterEl*100).toFixed(2);
+}
 
 function startListening() {
     if (!analyser) {
-        console.error("Analyser not initialized.");
         return;
     }
 
     analyser.getFloatTimeDomainData(buf);
     var ac = setFrequency(buf, audioContext.sampleRate);
+    var vol = getVolume(buf);
+
+
 
     if (ac == -1) {
-        pitchElem.innerText = "--";
-        noteElem.innerText = "--";
+        pitchElem.innerText = "  ";
+        noteElem.innerText = "  ";
+        volumeElem.innerText = "  ";
     } else {
         pitch = ac;
-        pitchElem.innerText = Math.round(pitch);
+        pitchElem.innerText = Math.round(pitch) + " Hz";
+        var note = noteFromPitch(pitch);
+        noteElem.innerText = noteStrings[note % 12];
+        volumeElem.innerText = vol;
     }
-    var note = noteFromPitch(pitch);
-    noteElem.innerHTML = noteStrings[note % 12];
+
     if (!window.requestAnimationFrame)
         window.requestAnimationFrame = window.webkitRequestAnimationFrame;
     rafID = window.requestAnimationFrame(startListening);
@@ -140,8 +151,9 @@ function stopListening() {
             analyser = null;
             mediaStreamSource = null;
             console.log("Microphone stopped.");
-            pitchElem.innerText = "--";
-            noteElem.innerText = "--";
+            pitchElem.innerText = "  ";
+            volumeElem.innerText = "  ";
+            noteElem.innerText = "  ";
         }).catch(function (err) {
             console.error("Error stopping microphone:", err);
         });
@@ -156,6 +168,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     pitchElem = document.getElementById("pitch");
     noteElem = document.getElementById("note");
+    volumeElem = document.getElementById("volume");
 
     // Add event listeners to the buttons
     document.getElementById("startButton").addEventListener("click", function () {

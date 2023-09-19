@@ -7,9 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Microphone</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet"
-          href=
-"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!--<script src="microphone.js"></script>-->
     <script src="script.js"></script>
 
@@ -18,17 +16,29 @@
 <body>
     <div class="container">
         <div class="title">
-            <h1>Microphone Audio Visualization</h1><br>
-            <p>PITCH: <span id="pitch">--</span> Hz</p><br>
-            <p>NOTE: <span id="note">--</span></p>
+            <h1>Microphone Audio Visualization</h1>
         </div>
+        <div class="grid-container">
+            <div class="grid-item">
+                <p><b>PITCH:</b> <span id="pitch"> </span></p>
+            </div>
+            <div class="grid-item">
+                <p><b>VOLUME:</b> <span id="volume"> </span></p>
+            </div>
+            <div class="grid-item">
+                <p><b>NOTE:</b> <span id="note"> </span></p>
+            </div>
+        </div>
+
+
+
     <button id="startButton"> START </button>
-    <button id="stopButton" > STOP </button>
-        <!--
+    <button id="stopButton"> STOP </button>
+    <!--
         <canvas id="myCanvas"></canvas>
         -->
     </div>
-    
+
 </body>
 
 </html>
