@@ -13,12 +13,19 @@ body {
 .grid-container {
     display: grid;
     grid-template-columns: auto auto auto;
-    margin: 50px;
+    margin-top: 10%;
 }
+
 .grid-item {
     padding: 30px;
     text-align: center;
 }
+
+#results {
+    margin-top:0;
+    height: 100px;
+}
+
 canvas {
     background-color: #242424;
     border: 6px solid gray;
@@ -29,7 +36,8 @@ h1 {
     margin-bottom: 5%;
 }
 
-.title, p{
+.title,
+p {
     margin-bottom: 2%;
     color: whitesmoke;
     font-size: 18px;
@@ -39,6 +47,7 @@ h1 {
     margin-bottom: 10%;
     color: whitesmoke;
 }
+
 .container {
     position: absolute;
     top: 50%;
@@ -47,10 +56,12 @@ h1 {
     text-align: center;
 }
 
-input, button {
+input,
+button {
     margin-bottom: 5%;
-    padding: 4%;
-    width: 25%;
+    padding: 3%;
+    margin: 1%;
+    width: 20%;
     border-radius: 10px;
     cursor: pointer;
 }

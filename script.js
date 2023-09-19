@@ -105,11 +105,26 @@ function setFrequency(buf, sampleRate) {
     return sampleRate / T0;
 }
 
-function getVolume(buf) {
-    let sumSquares = 0.0;
-    for (const amplitude of buf) { sumSquares += amplitude * amplitude; }
-    var volumeMeterEl = Math.sqrt(sumSquares / buf.length);
-    return (volumeMeterEl*100).toFixed(2);
+// Define a buffer to store previous audio buffer data
+const previousBuffers = [];
+
+function getStableVolume(buf) {
+    const sumSquares = buf.reduce((sum, amplitude) => sum + amplitude * amplitude, 0);
+    const rootMeanSquare = Math.sqrt(sumSquares / buf.length);
+
+    // Add the root mean square value to the previousBuffers array
+    previousBuffers.push(rootMeanSquare);
+
+    // Keep a limited history of previous volume values (adjust the history size as needed)
+    const historySize = 10;
+    if (previousBuffers.length > historySize) {
+        previousBuffers.shift();
+    }
+
+    // Calculate the average of the previous volume values
+    const averageVolume = previousBuffers.reduce((sum, value) => sum + value, 0) / previousBuffers.length;
+
+    return Math.round(averageVolume * 100);
 }
 
 function startListening() {
@@ -119,14 +134,12 @@ function startListening() {
 
     analyser.getFloatTimeDomainData(buf);
     var ac = setFrequency(buf, audioContext.sampleRate);
-    var vol = getVolume(buf);
-
-
+    var vol = getStableVolume(buf);
 
     if (ac == -1) {
-        pitchElem.innerText = "  ";
-        noteElem.innerText = "  ";
-        volumeElem.innerText = "  ";
+        pitchElem.innerText = "--";
+        noteElem.innerText = "--";
+        volumeElem.innerText = "--";
     } else {
         pitch = ac;
         pitchElem.innerText = Math.round(pitch) + " Hz";
@@ -151,9 +164,9 @@ function stopListening() {
             analyser = null;
             mediaStreamSource = null;
             console.log("Microphone stopped.");
-            pitchElem.innerText = "  ";
-            volumeElem.innerText = "  ";
-            noteElem.innerText = "  ";
+            pitchElem.innerText = "--";
+            volumeElem.innerText = "--";
+            noteElem.innerText = "--";
         }).catch(function (err) {
             console.error("Error stopping microphone:", err);
         });

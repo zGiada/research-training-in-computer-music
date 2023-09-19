@@ -18,23 +18,35 @@
         <div class="title">
             <h1>Microphone Audio Visualization</h1>
         </div>
+        <div class="buttons-group">
+            <button id="startButton"> START </button>
+            <button id="stopButton"> STOP </button>
+        </div>
         <div class="grid-container">
             <div class="grid-item">
-                <p><b>PITCH:</b> <span id="pitch"> </span></p>
+                <p><b>PITCH:</b> </p>
             </div>
             <div class="grid-item">
-                <p><b>VOLUME:</b> <span id="volume"> </span></p>
+                <p><b>VOLUME:</b></p>
             </div>
             <div class="grid-item">
-                <p><b>NOTE:</b> <span id="note"> </span></p>
+                <p><b>NOTE:</b> </p>
+            </div>
+        </div>
+        <div class="grid-container" id="results">
+            <div class="grid-item">
+                <p><span id="pitch"> -- </span></p>
+            </div>
+            <div class="grid-item">
+                <p><span id="volume"> -- </span></p>
+            </div>
+            <div class="grid-item">
+                <p><span id="note"> -- </span></p>
             </div>
         </div>
 
 
-
-    <button id="startButton"> START </button>
-    <button id="stopButton"> STOP </button>
-    <!--
+        <!--
         <canvas id="myCanvas"></canvas>
         -->
     </div>
