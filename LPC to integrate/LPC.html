@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html style="scroll-behavior: smooth;">
+<head>
+	<title>LPC</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+	
+    <script type="text/javascript" src="chart.js"></script>
+</head>
+<body>
+	<div style="float: left;">
+		<h1 style="float: left; margin-top: 10px;">LPC</h1>
+	</div>
+	
+	<button onclick="start()" id="start" style="float: right;">Inizio</button>
+	
+	<div id="divcontrol" style="display: none; afloat: right; position: fixed; top: 0; right: 0; padding: 10px; background-color: white;">
+		<button onclick="toggle()" id="control">Ferma</button><br>
+		<span id="freq"></span><br>
+		<span id="freq2"></span><br>
+		<span id="update"></span><br>
+		<canvas id="myChart" style="width: 200px;"></canvas>
+	</div>
+	
+	<table style="clear: both;">
+		<tr>
+			<td><table id="t1" style="display: none;"></table></td>
+			<td><table id="t2"></table></td>
+		</tr>
+	</table>
+	
+	
+	<!--script src="segnali.js"></script>
+	<script src="finestra.js"></script>
+	<script src="durbin.js"></script>
+	<script src="lattice.js"></script>
+	<script src="radici.js"></script>
+	<script src="formanti.js"></script-->
+	<script src="LPCFINAL.js"></script>
+	<script>
+	var lpc = [];
+	var f0 = 48000;
+	var update = 100;
+	var it = [0, 0];
+	
+	function main() {
+		//y = hamming(y);
+		var lpc = durbin(y);
+		var radici = durand(lpc);
+		console.log(radici);
+		console.log(formanti(radici, 48000));
+		//var roots = radici(lpc);
+		console.log(JSON.stringify(lpc).slice(1, -1));
+		//formanti(roots);
+	}
+	
+	function error() {
+		gptDurbin(y);
+		x = y;
+		
+		var predicted = [];
+		m = lpc.length;
+		for (let i = m; i < N; i++) {
+			predicted[i] = 0;
+			for (let j = 0; j < m; j++) {
+				predicted[i] -= lpc[j] * x[i - 1 - j];
+			}
+		}
+		
+		var e = 0;
+		for (let i = m; i < N; i++) {
+			console.log(i + ': ' + x[i] + ' --- ' + predicted[i]);
+			e += (predicted[i] - x[i]) ** 2;
+		}
+		console.log('Errore: ' + e);
+	}
+	
+	</script>
+	<script>
+	var ctx;
+	var play = false;
+	
+	const control = document.getElementById("control");
+	const time = document.getElementById("time");
+	const freq = document.getElementById("freq");
+	const freq2 = document.getElementById("freq2");
+	const htmlup = document.getElementById("update");
+	const stat = document.getElementById("stat");
+	var table = [document.getElementById("t1"), document.getElementById("t2")];
+	
+	var analyser;
+	
+	
+	
+	function start() {
+		ctx = new AudioContext({latencyHint: "interactive"}); // Frequenza di campionamento di sistema: 48000 Hz
+		freq.innerHTML = "sampleRate: <b>" + ctx.sampleRate + " Hz</b>";
+		freq2.innerHTML = "sottocampionamento: <b>" + f1 + " Hz</b>";
+		htmlup.innerHTML = "aggiornamento ogni <b>" + update + " ms</b>";
+		play = false;
+		
+		// Ottenimento dell'audio dal microfono
+		navigator.mediaDevices
+			.getUserMedia({audio: {
+                    echoCancellation: false,
+                    noiseSuppression: false,
+                    autoGainControl: false,
+                    highpassFilter: false,
+					sampleRate: 44100 // Operazione bellamente ignorata
+                }})
+			.then((stream) => {
+				document.getElementById("start").remove();
+				document.getElementById("divcontrol").style.display = "block";
+				
+				play = true;
+				const source = ctx.createMediaStreamSource(stream);
+				const analyser = ctx.createAnalyser();
+				analyser.fftSize = 32768;
+				let wave = new Float32Array(analyser.fftSize);
+				let signal = new Float32Array(32768);
+				
+				source.connect(analyser);
+				//analyser.connect(ctx.destination); // per ascoltare l'audio in input
+				
+				
+				setInterval(function () {
+					if (play) {
+						analyser.getFloatTimeDomainData(signal);
+						getVowel(signal, ctx.sampleRate);
+					}
+				}, update);
+				
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	}
+	
+	function toggle() {
+		if (play) {
+			ctx.suspend();
+			control.innerHTML = "Riprendi";
+		} else {
+			ctx.resume();
+			control.innerHTML = "Ferma";
+		}
+		play = !play;
+	}
+	
+	function aggiungiRiga(t, array) {
+		var row = table[t].insertRow();
+		for (let i = 0; i < array.length; i++) {
+			var cell = row.insertCell();
+			if (typeof(array[i]) == 'object') {
+				cell.innerHTML = '<span style="background-color: #d9ffc9;">' + (Math.floor(array[i].freq * 1000) / 1000) + '</span>';
+				cell.style.backgroundColor = '#d9ffc9';
+				var cell = row.insertCell();
+				cell.innerHTML = (Math.floor(array[i].band * 1000) / 1000);
+			} else if (array[i] == 0) {
+				cell.innerHTML = '&nbsp;';
+			} else if (typeof(array[i]) == 'string') {
+				cell.innerHTML = array[i];
+			} else {
+				cell.innerHTML = Math.floor(array[i] * 1000) / 1000;
+			}
+			if (array[i] == 0 || typeof(array[i]) == 'string') {
+				cell.style.backgroundColor = '#ffffb5';
+			} else {
+				cell.style.borderStyle = 'solid';
+				cell.style.borderWidth = '0px 0px 1px 0px';
+				cell.style.fontSize = '0.8em';
+			}
+		}
+		window.scrollTo(window.pageXOffset, document.body.scrollHeight);
+		
+		/*it[t] = it[t] + 1;
+		if (it[t] > 100)
+			table[t].deleteRow(0);
+		*/
+	}
+	
+	
+	/*
+	const canvas = document.getElementById("myChart");
+	var xVal = Array.from(Array(2048).keys());
+	var chart = new Chart(canvas, {
+		type: 'line',
+		data: {
+			labels: xVal,
+			datasets: [{
+				data: [],
+				borderColor: "blue",
+				fill: false,
+				stepped: false
+			}]
+		},
+		options: {
+			responsive: true,
+			animation: false,
+			interaction: {
+				intersect: false,
+				axis: 'x'
+			},
+			scales: {
+				y: {
+					//type: 'logarithmic',
+					min: -1,
+					max: 1
+				}
+			},
+			plugins: {
+				legend: {
+					display: false
+				}
+			}
+		}
+	});
+	*/
+	
+	</script>
+</body>
+</html>

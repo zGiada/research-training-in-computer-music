@@ -7,25 +7,28 @@
 
 body {
     overflow: hidden;
-    background: -webkit-gradient(linear, left top, left bottom, from(#242424), to(#a70505)) fixed;
+    background: -webkit-gradient(linear, left top, left bottom, from(#242424), to(#971919)) fixed;
 }
 
-.grid-container {
-    display: grid;
-    grid-template-columns: auto auto auto;
-    margin-top: 10%;
+.flex-container {
+    display: flex;
+    flex-direction: row;
+    font-size: 20px;
+    color: white;
+    margin-top: 20%;
 }
 
-.grid-item {
-    padding: 30px;
+.flex-item {
+    flex: 100%;
     text-align: center;
+    padding: 5% 0%;
 }
-
-#results {
-    margin-top:0;
-    height: 100px;
+/* Responsive layout - makes a one column-layout instead of two-column layout */
+@media (max-width: 800px) {
+    .flex-container {
+        flex-direction: column;
+    }
 }
-
 canvas {
     background-color: #242424;
     border: 6px solid gray;

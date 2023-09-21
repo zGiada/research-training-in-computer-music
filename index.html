@@ -5,50 +5,40 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Microphone</title>
+    <title>Microphone Audio Analyzer</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!--<script src="microphone.js"></script>-->
     <script src="script.js"></script>
-
 </head>
 
 <body>
     <div class="container">
         <div class="title">
-            <h1>Microphone Audio Visualization</h1>
+            <h1>Microphone Audio Analyzer</h1>
         </div>
         <div class="buttons-group">
             <button id="startButton"> START </button>
             <button id="stopButton"> STOP </button>
         </div>
-        <div class="grid-container">
-            <div class="grid-item">
-                <p><b>PITCH:</b> </p>
+
+        <div class="flex-container">
+            <div class="flex-item">
+                <p><b>PITCH:</b> <span id="pitch"> -- </span></p>
             </div>
-            <div class="grid-item">
-                <p><b>VOLUME:</b></p>
+            <div class="flex-item">
+                <p><b>VOLUME:</b> <span id="volume"> -- </span></p>
             </div>
-            <div class="grid-item">
-                <p><b>NOTE:</b> </p>
+            <div class="flex-item">
+                <p><b>NOTE:</b> <span id="note"> -- </span></p>
             </div>
-        </div>
-        <div class="grid-container" id="results">
-            <div class="grid-item">
-                <p><span id="pitch"> -- </span></p>
-            </div>
-            <div class="grid-item">
-                <p><span id="volume"> -- </span></p>
-            </div>
-            <div class="grid-item">
-                <p><span id="note"> -- </span></p>
+            <div class="flex-item">
+                <p><b>VOCALE:</b> <span id="vocale"> -- </span></p>
             </div>
         </div>
 
 
-        <!--
-        <canvas id="myCanvas"></canvas>
-        -->
+
     </div>
 
 </body>

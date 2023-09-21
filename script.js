@@ -16,15 +16,12 @@ function setAudio() {
     audioContext = new AudioContext();
     // Attempt to get audio input
     navigator.mediaDevices.getUserMedia({
-        "audio": {
-            "mandatory": {
-                "googEchoCancellation": "false",
-                "googAutoGainControl": "false",
-                "googNoiseSuppression": "false",
-                "googHighpassFilter": "false"
-            },
-            "optional": []
-        },
+        audio: {
+            echoCancellation: false,
+            noiseSuppression: false,
+            autoGainControl: false,
+            highpassFilter: false
+        }
     })
         .then((stream) => {
             // Create an AudioNode from the stream.
@@ -126,7 +123,14 @@ function getStableVolume(buf) {
 
     return Math.round(averageVolume * 100);
 }
-
+var vocali = ['I', '&Eacute ;', '&Egrave;', 'A', '&Ograve;', '&Oacute;', 'U'];
+let vocale = vocali[(Math.floor(Math.random() * vocali.length))];
+function getVowel(buf, sampleRate) {
+    // donna
+    var form1 = [320, 400, 620, 920, 640, 400, 360];
+    var form2 = [2750, 2500, 2400, 1400, 1200, 920, 760];
+    return vocale;
+}
 function startListening() {
     if (!analyser) {
         return;
@@ -135,17 +139,20 @@ function startListening() {
     analyser.getFloatTimeDomainData(buf);
     var ac = setFrequency(buf, audioContext.sampleRate);
     var vol = getStableVolume(buf);
+    var vowel = getVowel(buf, audioContext.sampleRate);
 
     if (ac == -1) {
         pitchElem.innerText = "--";
-        noteElem.innerText = "--";
         volumeElem.innerText = "--";
+        noteElem.innerText = "--";
+        vocaleElem.innerText = "--";
     } else {
         pitch = ac;
         pitchElem.innerText = Math.round(pitch) + " Hz";
+        volumeElem.innerText = vol;
         var note = noteFromPitch(pitch);
         noteElem.innerText = noteStrings[note % 12];
-        volumeElem.innerText = vol;
+        vocaleElem.innerHTML = vowel;
     }
 
     if (!window.requestAnimationFrame)
@@ -167,6 +174,7 @@ function stopListening() {
             pitchElem.innerText = "--";
             volumeElem.innerText = "--";
             noteElem.innerText = "--";
+            vocaleElem.innerText = "--";
         }).catch(function (err) {
             console.error("Error stopping microphone:", err);
         });
@@ -180,8 +188,9 @@ document.addEventListener("DOMContentLoaded", function () {
     stopB.style.cursor = "not-allowed";
 
     pitchElem = document.getElementById("pitch");
-    noteElem = document.getElementById("note");
     volumeElem = document.getElementById("volume");
+    noteElem = document.getElementById("note");
+    vocaleElem = document.getElementById("vocale");
 
     // Add event listeners to the buttons
     document.getElementById("startButton").addEventListener("click", function () {
