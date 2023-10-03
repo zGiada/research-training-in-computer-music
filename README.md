@@ -1,15 +1,36 @@
-# research-training-in-computer-music
-The topic of the activity is about the development of a graphic and intuitive application that helps people (particularly children) with communication difficulties: it allows them to autonomously do vocal exercises given by an expert doctor in order to improve their situation.
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-------
+## Getting Started
 
-# BASIC PROTOTYPE
+First, run the development server:
 
-This branch contains a simple basic prototype of the application.
-An SVG Circle is centered on the screen and buttons in a navbar pinned at the bottom allow you to:
-- change its **color**: from the starting yellow it can become blue, red, green, orange or gray, in a completely random way.
-  → represents the sound of the Italian *vowel*
-- change its **size**: according to 4 levels, 2 higher than the starting size and 2 lower than the starting size.
-  → represents the *sound intensity*
-- change its **y-position**: according to 4 levels, 2 higher than the starting y-position and 2 lower than the starting y-position.
-  → represents the *pitch*
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+
+This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+
+## Learn More
+
+To learn more about Next.js, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
