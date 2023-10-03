@@ -8,7 +8,7 @@ import Header from './components/Header';
 export default function App() {
 
   [svgColor, setSvgColor] = useState('yellow'); 
-  [RadiusSVG, setRadiusSVG] = useState(15);
+  [RadiusSVG, setRadiusSVG] = useState(10);
   [yCoordinate, setYCoordinate] = useState(50);
 
   return (
