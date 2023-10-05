@@ -28,7 +28,7 @@ body {
     rgb(var(--background-start-rgb));
     */
   /*background: rgb(var(--background-color));*/
-  background-image: url("../public/bg.jpg");
+  background-image: url("../../public/bg.jpg");
   background-size: cover;
 }
 

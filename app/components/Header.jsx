@@ -34,7 +34,9 @@ const Header = () => {
               </li>
             </ul>
           </div>
-          {/*<img src="./loghi/2x/soundRise-scritta.png" alt="Logo" class="logo" />*/}
+          {/**
+          <img src="../../public/soundrise-logo.png" alt="Logo" class="logo" />
+          */}
           <p className="normal-case font-semibold text-xl"> SoundRise</p>
         </div>
         <div className="navbar-center hidden lg:flex">
