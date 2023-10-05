@@ -180,10 +180,10 @@ function Button() {
       const v = getVowel(buf, audioContext.sampleRate);
 
       if (ac == -1) {
-        setPitch("--");
-        setVolume("--");
-        setNote("--");
-        setVowel("--");
+        setPitch("I'm listening...");
+        setVolume("I'm listening...");
+        setNote("I'm listening...");
+        setVowel("I'm listening...");
       } else {
         setPitch(Math.round(ac) + " Hz");
         setVolume(vol);
@@ -243,28 +243,36 @@ function Button() {
     setStopButtonDisabled(true);
   };
   return (
-    <div className="btn-group btn-group-vertical lg:btn-group-horizontal text-neutral-content">
-      <button
-        className={`btn ${startButtonDisabled ? "btn-disabled" : "btn-active"}`}
-        onClick={handleStartListening}
-        disabled={startButtonDisabled}
-      >
-        Start Listening
-      </button>
-      <button
-        className={`btn ${stopButtonDisabled ? "btn-disabled" : "btn-active"}`}
-        onClick={handleStopListening}
-        disabled={stopButtonDisabled}
-      >
-        Stop Listening
-      </button>
-      <div>
+    <footer>
+      {/* 
+      <div className="grid grid-flow-col space-x-16 mb-6 gap-20 text-neutral-content">
         <p>PITCH: {pitch}</p>
         <p>VOLUME: {volume}</p>
         <p>NOTE: {note}</p>
         <p>VOCALE: {vowel}</p>
       </div>
-    </div>
+*/}
+      <div className="btn-group lg:btn-group-horizontal text-neutral-content">
+        <button
+          className={`btn ${
+            startButtonDisabled ? "btn-disabled" : "btn-active"
+          }`}
+          onClick={handleStartListening}
+          disabled={startButtonDisabled}
+        >
+          Start
+        </button>
+        <button
+          className={`btn ${
+            stopButtonDisabled ? "btn-disabled" : "btn-active"
+          }`}
+          onClick={handleStopListening}
+          disabled={stopButtonDisabled}
+        >
+          Stop
+        </button>
+      </div>
+    </footer>
   );
 }
 

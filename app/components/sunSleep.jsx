@@ -1,25 +1,19 @@
 import React from "react";
 
-const Sun = ({ svgColor, rad, yCoordinate }) => {
+const sunSleep = ({ rad, yCoordinate }) => {
   const shadowRadius = rad + (rad * 50) / 100;
 
   const eyesRadius = rad - Math.round(rad / 1.3);
   const longSideEyes = eyesRadius + Math.round((eyesRadius / 100) * 20);
 
-  const irideRadius = eyesRadius - Math.round(eyesRadius / 2);
-  const longSideIride = irideRadius + Math.round((irideRadius / 100) * 60);
-
-  const pupilRadius = irideRadius - Math.round((irideRadius / 100) * 40);
-  const longSidePupil = longSideIride - Math.round((longSideIride / 100) * 30);
-
   const ycoordinateEyes = yCoordinate - Math.round((rad / 100) * 33);
   const xcoordinateEyesRight = Math.round((rad / 100) * 33);
   const xcoordinateEyesLeft = -xcoordinateEyesRight;
 
-  const ycoordinateIride = ycoordinateEyes + Math.round((rad / 100) * 10);
-  const ycoordinatePupi = ycoordinateIride + Math.round((rad / 100) * 5);
   const xRect = xcoordinateEyesLeft * 2;
   const widthRect = (xcoordinateEyesRight - xcoordinateEyesLeft) * 2;
+  const yRect = ycoordinateEyes - longSideEyes - longSideEyes / 2.5;
+  const heightRect = longSideEyes + longSideEyes / 1.5;
 
   const cyMouth = ycoordinateEyes + longSideEyes * 2;
   {
@@ -46,6 +40,7 @@ const Sun = ({ svgColor, rad, yCoordinate }) => {
           <stop offset="50%" stopColor={svgColor} stopOpacity="0.8" />
           <stop offset="100%" stopColor={svgColor} stopOpacity="0" />
         </radialGradient>
+
         <circle
           cx={0}
           cy={yCoordinate}
@@ -62,6 +57,7 @@ const Sun = ({ svgColor, rad, yCoordinate }) => {
           stroke="black"
           style={{ transform: "translate(50%, 50%)" }}
         />
+
         {/* Bocca */}
         <ellipse
           cx={0}
@@ -82,33 +78,15 @@ const Sun = ({ svgColor, rad, yCoordinate }) => {
           fill={svgColor}
           style={{ transform: "translate(50%, 50%)" }}
         />
+
         {/* Right Eye */}
         <ellipse
           cx={xcoordinateEyesRight}
           cy={ycoordinateEyes}
           rx={eyesRadius}
           ry={longSideEyes}
-          fill={"white"}
+          fill={svgColor}
           stroke="black"
-          style={{ transform: "translate(50%, 50%)" }}
-        />
-        <ellipse
-          cx={xcoordinateEyesRight}
-          cy={ycoordinateIride}
-          rx={irideRadius}
-          ry={longSideIride}
-          stroke="black"
-          fill={"lightgreen"}
-          style={{ transform: "translate(50%, 50%)" }}
-        />
-        {/* 5b3a29 */}
-
-        <ellipse
-          cx={xcoordinateEyesRight}
-          cy={ycoordinatePupi}
-          rx={pupilRadius}
-          ry={longSidePupil}
-          fill={"black"}
           style={{ transform: "translate(50%, 50%)" }}
         />
 
@@ -118,26 +96,17 @@ const Sun = ({ svgColor, rad, yCoordinate }) => {
           cy={ycoordinateEyes}
           rx={eyesRadius}
           ry={longSideEyes}
-          fill={"white"}
+          fill={svgColor}
           stroke="black"
-          style={{ transform: "translate(50%, 50%)" }}
-        />
-        <ellipse
-          cx={xcoordinateEyesLeft}
-          cy={ycoordinateIride}
-          rx={irideRadius}
-          ry={longSideIride}
-          stroke="black"
-          fill={"lightgreen"}
           style={{ transform: "translate(50%, 50%)" }}
         />
 
-        <ellipse
-          cx={xcoordinateEyesLeft}
-          cy={ycoordinatePupi}
-          rx={pupilRadius}
-          ry={longSidePupil}
-          fill={"black"}
+        <rect
+          x={xRect}
+          y={yRect}
+          width={widthRect}
+          height={heightRect}
+          fill={svgColor}
           style={{ transform: "translate(50%, 50%)" }}
         />
       </svg>
@@ -145,4 +114,4 @@ const Sun = ({ svgColor, rad, yCoordinate }) => {
   );
 };
 
-export default Sun;
+export default sunSleep;

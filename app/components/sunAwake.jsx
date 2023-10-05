@@ -1,6 +1,6 @@
 import React from "react";
 
-const Sun = ({ svgColor, rad, yCoordinate }) => {
+const sunAwake = ({ rad, yCoordinate }) => {
   const shadowRadius = rad + (rad * 50) / 100;
 
   const eyesRadius = rad - Math.round(rad / 1.3);
@@ -145,4 +145,4 @@ const Sun = ({ svgColor, rad, yCoordinate }) => {
   );
 };
 
-export default Sun;
+export default sunAwake;
