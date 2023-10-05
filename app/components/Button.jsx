@@ -229,20 +229,33 @@ function Button() {
       stopListening();
     };
   }, [isListening]);
-
+  const [startButtonDisabled, setStartButtonDisabled] = useState(false);
+  const [stopButtonDisabled, setStopButtonDisabled] = useState(true);
   const handleStartListening = () => {
     setIsListening(true);
+    setStartButtonDisabled(true);
+    setStopButtonDisabled(false);
   };
 
   const handleStopListening = () => {
     setIsListening(false);
+    setStartButtonDisabled(false);
+    setStopButtonDisabled(true);
   };
   return (
     <div className="btn-group btn-group-vertical lg:btn-group-horizontal text-neutral-content">
-      <button className="btn btn-active" onClick={handleStartListening}>
+      <button
+        className={`btn ${startButtonDisabled ? "btn-disabled" : "btn-active"}`}
+        onClick={handleStartListening}
+        disabled={startButtonDisabled}
+      >
         Start Listening
       </button>
-      <button className="btn" onClick={handleStopListening}>
+      <button
+        className={`btn ${stopButtonDisabled ? "btn-disabled" : "btn-active"}`}
+        onClick={handleStopListening}
+        disabled={stopButtonDisabled}
+      >
         Stop Listening
       </button>
       <div>
