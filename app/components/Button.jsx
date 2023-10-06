@@ -243,16 +243,15 @@ function Button() {
     setStopButtonDisabled(true);
   };
   return (
-    <footer>
-      {/* 
-      <div className="grid grid-flow-col space-x-16 mb-6 gap-20 text-neutral-content">
+    <footer className="w-full">
+      <div className="grid grid-cols-4 mb-5 gap-4 text-neutral-content">
         <p>PITCH: {pitch}</p>
         <p>VOLUME: {volume}</p>
         <p>NOTE: {note}</p>
         <p>VOCALE: {vowel}</p>
       </div>
-*/}
-      <div className="btn-group lg:btn-group-horizontal text-neutral-content">
+
+      <div className="grid grid-cols-2 btn-group text-neutral-content">
         <button
           className={`btn ${
             startButtonDisabled ? "btn-disabled" : "btn-active"

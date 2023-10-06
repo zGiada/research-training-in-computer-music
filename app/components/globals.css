@@ -36,6 +36,13 @@ header {
   background: #fff;
 }
 
-.logo{
+.logo {
   width: 25%;
+}
+
+.grid-container {
+  background-color: blue;
+  display: grid;
+  justify-content: space-evenly;
+
 }

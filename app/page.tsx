@@ -1,15 +1,15 @@
 "use client";
 import Header from "./components/Header";
 import Sun from "./components/Sun";
+import SunSleep from "./components/sunSleep";
+import sunAwake from "./components/sunAwake";
 import Button from "./components/Button";
 
 export default function Home() {
   var svgColor = "yellow";
   var rad = 100;
   var yCoordinate = 0;
-  function handleClick() {
-    alert("increment like count");
-  }
+  
   return (
     <main className="flex min-h-screen flex-col items-center ">
       <Header />
