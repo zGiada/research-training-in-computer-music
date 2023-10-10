@@ -38,7 +38,7 @@ const Sun = ({ svgColor, rad, yCoordinate }) => {
     <div className="flex-grow sun-container w-full flex items-center justify-center ">
       <svg
         width="100%" // Set the desired width of the circle
-        height="90vh" // Set the desired height of the circle
+        height="100vh" // Set the desired height of the circle
         xmlns="http://www.w3.org/2000/svg"
       >
         <radialGradient id="shadow" cx="50%" cy="50%" r="50%">
@@ -98,7 +98,7 @@ const Sun = ({ svgColor, rad, yCoordinate }) => {
           rx={irideRadius}
           ry={longSideIride}
           stroke="black"
-          fill={"lightgreen"}
+          fill={"lightblue"}
           style={{ transform: "translate(50%, 50%)" }}
         />
         {/* 5b3a29 */}
@@ -128,7 +128,7 @@ const Sun = ({ svgColor, rad, yCoordinate }) => {
           rx={irideRadius}
           ry={longSideIride}
           stroke="black"
-          fill={"lightgreen"}
+          fill={"lightblue"}
           style={{ transform: "translate(50%, 50%)" }}
         />
 

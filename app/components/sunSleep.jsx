@@ -1,6 +1,6 @@
 import React from "react";
 
-const sunSleep = ({ rad, yCoordinate }) => {
+const sunSleep = ({ svgColor, rad, yCoordinate }) => {
   const shadowRadius = rad + (rad * 50) / 100;
 
   const eyesRadius = rad - Math.round(rad / 1.3);

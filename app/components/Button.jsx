@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import * as dimsFunctions from "../audio/setDimsValue";
 function Button() {
   const [isListening, setIsListening] = useState(false);
   const [pitch, setPitch] = useState("--");
@@ -14,19 +14,21 @@ function Button() {
     let rafID = null;
     const buflen = 2048;
     const buf = new Float32Array(buflen);
-
+    var buffer_pitch = [];
+    var buffer_vol = [];
+    var count_sil = 0;
     const noteStrings = [
       "C",
-      "C#/Db",
+      "C#",
       "D",
-      "D#/Eb",
+      "D#",
       "E",
       "F",
-      "F#/Gb",
+      "F#",
       "G",
-      "G#/Ab",
+      "G#",
       "A",
-      "A#/Bb",
+      "A#",
       "B",
     ];
     function noteFromPitch(frequency) {
@@ -129,15 +131,7 @@ function Button() {
 
       return Math.round(averageVolume * 100);
     }
-    var vocali = [
-      "I",
-      "&Eacute ;",
-      "&Egrave;",
-      "A",
-      "&Ograve;",
-      "&Oacute;",
-      "U",
-    ];
+    var vocali = ["I", "E", "A", "O", "U"];
     let vocale = vocali[Math.floor(Math.random() * vocali.length)];
     function getVowel(buf, sampleRate) {
       // donna
@@ -151,14 +145,25 @@ function Button() {
       navigator.mediaDevices
         .getUserMedia({
           audio: {
-            echoCancellation: false,
-            noiseSuppression: false,
-            autoGainControl: false,
-            highpassFilter: false,
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true,
+            highpassFilter: true,
           },
         })
         .then((stream) => {
           mediaStreamSource = audioContext.createMediaStreamSource(stream);
+
+          // Create DynamicsCompressor and get the reduction value
+          const compressor = audioContext.createDynamicsCompressor();
+          compressor.threshold.value = -50;
+          compressor.knee.value = 40;
+          compressor.ratio.value = 12;
+          compressor.attack.value = 0;
+          compressor.release.value = 0.25;
+
+          compressor.reduction; // Just to avoid a warning, value is not used
+
           analyser = audioContext.createAnalyser();
           analyser.fftSize = 2048;
           mediaStreamSource.connect(analyser);
@@ -168,7 +173,15 @@ function Button() {
           console.error(`${err.name}: ${err.message}`);
         });
     };
-
+    function ArrayAvg(myArray) {
+      var i = 0,
+        summ = 0,
+        ArrayLen = myArray.length;
+      while (i < ArrayLen) {
+        summ = summ + myArray[i++];
+      }
+      return summ / ArrayLen;
+    }
     const startListening = () => {
       if (!analyser) {
         return;
@@ -179,16 +192,25 @@ function Button() {
       const vol = getStableVolume(buf);
       const v = getVowel(buf, audioContext.sampleRate);
 
+      var MAX_NUM = 250;
+      let silence = false;
+
       if (ac == -1) {
         setPitch("I'm listening...");
         setVolume("I'm listening...");
         setNote("I'm listening...");
         setVowel("I'm listening...");
       } else {
-        setPitch(Math.round(ac) + " Hz");
+        const pitchValue = Math.round(ac);
+        setPitch(pitchValue + "Hz");
+        const yCoordValue = dimsFunctions.setyCoord(pitchValue);
+
         setVolume(vol);
+        const radValue = dimsFunctions.setRad(vol);
+
         const n = noteFromPitch(ac);
         setNote(noteStrings[n % 12]);
+
         setVowel(v);
       }
 
@@ -198,6 +220,8 @@ function Button() {
     };
 
     const stopListening = () => {
+      buffer_pitch = [];
+      buffer_vol = [];
       if (audioContext) {
         if (rafID) {
           window.cancelAnimationFrame(rafID);
@@ -209,7 +233,11 @@ function Button() {
             audioContext = null;
             analyser = null;
             mediaStreamSource = null;
-            console.log("Microphone stopped.");
+            /* console.log(
+              "Microphone stopped.\nlen: " +
+                buffer_pitch.filter((x, i) => buffer_pitch.indexOf(x) === i)
+                  .length
+            );*/
             setPitch("--");
             setVolume("--");
             setNote("--");
@@ -243,33 +271,33 @@ function Button() {
     setStopButtonDisabled(true);
   };
   return (
-    <footer className="w-full">
-      <div className="grid grid-cols-4 mb-5 gap-4 text-neutral-content">
-        <p>PITCH: {pitch}</p>
-        <p>VOLUME: {volume}</p>
-        <p>NOTE: {note}</p>
-        <p>VOCALE: {vowel}</p>
-      </div>
+    <footer className="w-full flex text-white p-2 bg-transparent fixed inset-x-0 bottom-0">
+      <div className="grid grid-cols-5 gap-5">
+        <div className="grid grid-cols-2 btn-group">
+          <button
+            className={`btn ${
+              startButtonDisabled ? "btn-disabled" : "btn-active"
+            }`}
+            onClick={handleStartListening}
+            disabled={startButtonDisabled}
+          >
+            Start
+          </button>
+          <button
+            className={`btn ${
+              stopButtonDisabled ? "btn-disabled" : "btn-active"
+            }`}
+            onClick={handleStopListening}
+            disabled={stopButtonDisabled}
+          >
+            Stop
+          </button>
+        </div>
 
-      <div className="grid grid-cols-2 btn-group text-neutral-content">
-        <button
-          className={`btn ${
-            startButtonDisabled ? "btn-disabled" : "btn-active"
-          }`}
-          onClick={handleStartListening}
-          disabled={startButtonDisabled}
-        >
-          Start
-        </button>
-        <button
-          className={`btn ${
-            stopButtonDisabled ? "btn-disabled" : "btn-active"
-          }`}
-          onClick={handleStopListening}
-          disabled={stopButtonDisabled}
-        >
-          Stop
-        </button>
+        <p className="flex items-center">PITCH: {pitch}</p>
+        <p className="flex items-center">VOLUME: {volume}</p>
+        <p className="flex items-center">NOTE: {note}</p>
+        <p className="flex items-center">VOCALE: {vowel}</p>
       </div>
     </footer>
   );

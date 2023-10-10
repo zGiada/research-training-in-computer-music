@@ -9,10 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@react-spring/parallax": "^9.7.3",
+    "@syncfusion/ej2-react-inputs": "^23.1.38",
     "clsx": "^2.0.0",
     "next": "latest",
     "react": "latest",
-    "react-dom": "latest"
+    "react-dom": "latest",
+    "react-range-slider-input": "^3.0.7"
   },
   "devDependencies": {
     "@types/node": "latest",

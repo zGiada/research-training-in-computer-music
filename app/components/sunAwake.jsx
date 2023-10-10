@@ -1,6 +1,6 @@
 import React from "react";
 
-const sunAwake = ({ rad, yCoordinate }) => {
+const sunAwake = ({ svgColor, rad, yCoordinate }) => {
   const shadowRadius = rad + (rad * 50) / 100;
 
   const eyesRadius = rad - Math.round(rad / 1.3);
@@ -98,7 +98,7 @@ const sunAwake = ({ rad, yCoordinate }) => {
           rx={irideRadius}
           ry={longSideIride}
           stroke="black"
-          fill={"lightgreen"}
+          fill={"lightblue"}
           style={{ transform: "translate(50%, 50%)" }}
         />
         {/* 5b3a29 */}
@@ -128,7 +128,7 @@ const sunAwake = ({ rad, yCoordinate }) => {
           rx={irideRadius}
           ry={longSideIride}
           stroke="black"
-          fill={"lightgreen"}
+          fill={"lightblue"}
           style={{ transform: "translate(50%, 50%)" }}
         />
 

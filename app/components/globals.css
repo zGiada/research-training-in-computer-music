@@ -27,13 +27,35 @@ body {
     )
     rgb(var(--background-start-rgb));
     */
-  /*background: rgb(var(--background-color));*/
+  /*
   background-image: url("../../public/bg.jpg");
-  background-size: cover;
+  background-size: cover;*/
+  background: rgb(15, 109, 199);
 }
 
-header {
-  background: #fff;
+.main-page {
+  background-image: url("../../public/bg.jpg");
+  background-size: cover;
+  /*background: rgb(15, 56, 91);*/
+}
+.start-page {
+  background: linear-gradient(rgb(6, 51, 94), rgb(15, 109, 199));
+  background: linear-gradient(
+    #58151a,
+    #bc2909,
+    #ba6d09,
+    #71a8ee,
+    #3072eb,
+    rgb(15, 109, 199)
+  );
+}
+.navbar {
+  background-color: transparent;
+
+  /*
+  background: rgb(255, 255, 255);
+  background: linear-gradient(to top, transparent, rgba(26, 54, 139, 0.9))
+    rgba(72, 160, 236, 0.05);*/
 }
 
 .logo {
@@ -44,5 +66,37 @@ header {
   background-color: blue;
   display: grid;
   justify-content: space-evenly;
+}
 
+.bg-wave {
+  background-image: url("../../public/wave.svg");
+  background-repeat: repeat-x;
+  background-position: 0 bottom;
+  /* animation: wave-animation 10s infinite linear;*/
+}
+/*
+@keyframes wave-animation {
+  0% {
+    background-position: 0 bottom;
+  }
+  100% {
+    background-position: 100% bottom;
+  }
+}
+*/
+
+.bg-gradient-rgba {
+  background-image: linear-gradient(
+    to top,
+    rgba(69, 174, 235, 0.01),
+    rgba(17, 17, 138, 0.397)
+  );
+}
+
+.bg-gradient-sky {
+  background-image: radial-gradient(
+    at bottom,
+    rgb(69, 174, 235),
+    rgb(35, 35, 199)
+  );
 }
