@@ -71,7 +71,7 @@ body {
 .bg-wave {
   background-image: url("../../public/wave.svg");
   background-repeat: repeat-x;
-  background-position: 0 bottom;
+  background-position: 40% bottom;
   /* animation: wave-animation 10s infinite linear;*/
 }
 /*
@@ -99,4 +99,24 @@ body {
     rgb(69, 174, 235),
     rgb(35, 35, 199)
   );
+}
+
+.triangle-icon::before {
+  content: "";
+  width: 0;
+  height: 0;
+  border-bottom: 7px solid transparent;
+  border-top: 7px solid transparent;
+  border-left: 14px solid currentColor; /* You can adjust the size */
+  display: inline-block;
+  margin-right: 0.5em; /* Adjust the spacing between the icon and text */
+}
+
+.square-icon::before {
+  content: "";
+  width: 14px; /* Adjust the size of the square */
+  height: 14px; /* Adjust the size of the square */
+  display: inline-block;
+  margin-right: 8px; /* Adjust the spacing between the icon and text */
+  background-color: currentColor; /* Icon color */
 }

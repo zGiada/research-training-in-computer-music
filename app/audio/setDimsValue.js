@@ -11,13 +11,8 @@ const width = getCurrentDimension().width;
 const minVol = 0;
 const maxVol = 50;
 
-const minRad = 40; // Math.round((getCurrentDimension().width * 3.75) / 100);
-const maxRad = 140; //Math.round((getCurrentDimension().width * 11.1) / 100);
-
-/*function radDims() {
-  var str = "min rad = " + minRad + " max rad = " + maxRad;
-  return str;
-}*/
+const minRad = 40;
+const maxRad = 140;
 
 function setRad(volume) {
   if (volume <= minVol) {
@@ -42,7 +37,7 @@ const lowest_pitch = usable_height / 2;
 // punto più alto = > quando pitch è >= 600       -250
 const highest_pitch = -lowest_pitch;
 
-function setyCoord(pitch) {
+function setPosPitch(pitch) {
   if (pitch <= minPitch) {
     return lowest_pitch;
   }
@@ -61,7 +56,8 @@ function setyCoord(pitch) {
 // Export the functions to make them accessible in other files
 module.exports = {
   setRad,
-  setyCoord,
+  setPosPitch,
+  minRad,
   height,
   width,
 };

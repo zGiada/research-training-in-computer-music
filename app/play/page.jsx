@@ -1,6 +1,25 @@
-import React, { useState, useEffect } from "react";
+"use client";
+import Header from "../components/Header";
+import SunSleep from "../components/sunSleep";
+import SunAwake from "../components/sunAwake";
+import Button from "../components/Button";
 import * as dimsFunctions from "../audio/setDimsValue";
-function Button() {
+import React, { useState, useEffect } from "react";
+
+export default function Play() {
+  // console.log(getCurrentDimension().width + " " + getCurrentDimension().height);
+  //var svgColor = "yellow";
+  const [svgColor, setSvgColor] = useState("yellow");
+  // var rad = dimsFunctions.minRad;
+  const [rad, setRad] = useState(dimsFunctions.minRad);
+
+  var yCoordinate = 0;
+  const [yCoord, setYCoord] = useState(
+    (dimsFunctions.height - Math.round((dimsFunctions.height * 30) / 100)) / 2
+  );
+  // (dimsFunctions.height - Math.round((dimsFunctions.height * 30) / 100)) / 2;
+
+  const [sunListen, setSunListen] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [pitch, setPitch] = useState("--");
   const [volume, setVolume] = useState("--");
@@ -8,7 +27,7 @@ function Button() {
   const [vowel, setVowel] = useState("--");
 
   useEffect(() => {
-    let audioContext = null;
+    var audioContext = null;
     let analyser = null;
     let mediaStreamSource = null;
     let rafID = null;
@@ -184,6 +203,21 @@ function Button() {
       }
       return summ / ArrayLen;
     }
+
+    const selectColor = (vocale) => {
+      if (vocale == "I") {
+        setSvgColor("blue");
+      } else if (vocale == "E") {
+        setSvgColor("#4CC94C");
+      } else if (vocale == "A") {
+        setSvgColor("red");
+      } else if (vocale == "O") {
+        setSvgColor("orange");
+      } else if (vocale == "U") {
+        setSvgColor("#C0C0C0");
+      }
+    };
+
     const startListening = () => {
       if (!analyser) {
         return;
@@ -193,12 +227,20 @@ function Button() {
       const ac = setFrequency(buf, audioContext.sampleRate);
       const vol = getStableVolume(buf);
       const v = getVowel(buf, audioContext.sampleRate);
-
+      var MAX_BUF = 600;
       if ((ac == -1 || ac < 100 || ac > 600) && (vol < 1 || vol > 50)) {
         setPitch("I'm listening...");
         setVolume("I'm listening...");
         setNote("I'm listening...");
         setVowel("I'm listening...");
+        setSunListen(false);
+        setRad(dimsFunctions.minRad);
+        setSvgColor("yellow");
+        setYCoord(
+          (dimsFunctions.height -
+            Math.round((dimsFunctions.height * 30) / 100)) /
+            2
+        );
         count_sil++;
         if (count_sil >= 50) {
           console.log("silence");
@@ -208,31 +250,36 @@ function Button() {
         }
       } else {
         if (ac != -1 && ac >= 100 && ac <= 600 && vol > 0 && vol <= 50) {
-          if (buffer_pitch.length > 1000) {
+          if (buffer_pitch.length > MAX_BUF) {
             buffer_pitch.shift();
             buffer_pitch.push(ac);
           } else {
             buffer_pitch.push(ac);
           }
 
-          if (buffer_vol.length > 1000) {
+          if (buffer_vol.length > MAX_BUF) {
             buffer_vol.shift();
             buffer_vol.push(vol);
           } else {
             buffer_vol.push(vol);
           }
 
+          setSunListen(true);
+
           const pitchValue = Math.round(ArrayAvg(buffer_pitch));
-          setPitch(pitchValue + "Hz");
-          const yCoordValue = dimsFunctions.setyCoord(pitchValue);
+          const yCoordValue = dimsFunctions.setPosPitch(pitchValue);
+          setPitch(pitchValue);
+          setYCoord(yCoordValue);
 
           const volValue = Math.round(ArrayAvg(buffer_vol));
           setVolume(volValue);
           const radValue = dimsFunctions.setRad(volValue);
+          setRad(radValue);
 
           const n = noteFromPitch(pitchValue);
           setNote(noteStrings[n % 12]);
 
+          selectColor(v);
           setVowel(v);
         }
       }
@@ -246,6 +293,13 @@ function Button() {
       buffer_pitch = [];
       buffer_vol = [];
       count_sil = 0;
+      setSunListen(false);
+      setRad(dimsFunctions.minRad);
+      setSvgColor("yellow");
+      setYCoord(
+        (dimsFunctions.height - Math.round((dimsFunctions.height * 30) / 100)) /
+          2
+      );
       if (audioContext) {
         if (rafID) {
           window.cancelAnimationFrame(rafID);
@@ -296,37 +350,81 @@ function Button() {
     setStartButtonDisabled(false);
     setStopButtonDisabled(true);
   };
-  return (
-    <footer className="w-full flex text-white p-2 bg-transparent fixed inset-x-0 bottom-0">
-      <div className="grid grid-cols-5 gap-5">
-        <div className="grid grid-cols-2 btn-group">
-          <button
-            className={`btn ${
-              startButtonDisabled ? "btn-disabled" : "btn-active"
-            }`}
-            onClick={handleStartListening}
-            disabled={startButtonDisabled}
-          >
-            Start
-          </button>
-          <button
-            className={`btn ${
-              stopButtonDisabled ? "btn-disabled" : "btn-active"
-            }`}
-            onClick={handleStopListening}
-            disabled={stopButtonDisabled}
-          >
-            Stop
-          </button>
-        </div>
 
-        <p className="flex items-center">PITCH: {pitch}</p>
-        <p className="flex items-center">VOLUME: {volume}</p>
-        <p className="flex items-center">NOTE: {note}</p>
-        <p className="flex items-center">VOCALE: {vowel}</p>
+  return (
+    <main className="flex max-h-screen flex-col items-center ">
+      <Header />
+      <div className="absolute bg-wave flex inset-x-0 bottom-0 min-h-[30vh] text-white p-2"></div>
+      {sunListen ? (
+        <SunAwake svgColor={svgColor} rad={rad} yCoordinate={yCoord} />
+      ) : (
+        <SunSleep svgColor={svgColor} rad={rad} yCoordinate={yCoord} />
+      )}
+
+      {/* FOOTER CON SCRITTA */}
+      <div className="flex min-h-[10vh] p-6 bg-base-100 fixed inset-x-0 bottom-0">
+        <footer className="w-full flex text-white p-2 bg-transparent fixed inset-x-0 bottom-0">
+          <div className="grid grid-cols-5 gap-5">
+            <div className="grid grid-cols-2 btn-group">
+              <button
+                className={`btn w-40${
+                  startButtonDisabled ? "btn-disabled" : "btn-active"
+                }`}
+                onClick={handleStartListening}
+                disabled={startButtonDisabled}
+              >
+                <span className="triangle-icon text-current"></span>
+                Start
+              </button>
+              <button
+                className={`btn w-40${
+                  stopButtonDisabled ? "btn-disabled" : "btn-active"
+                }`}
+                onClick={handleStopListening}
+                disabled={stopButtonDisabled}
+              >
+                <span className="square-icon text-current"></span>
+                Stop
+              </button>
+            </div>
+
+            <p className="flex items-center">PITCH: {pitch}</p>
+            <p className="flex items-center">VOLUME: {volume}</p>
+            <p className="flex items-center">NOTE: {note}</p>
+            <p className="flex items-center">VOCALE: {vowel}</p>
+          </div>
+        </footer>
       </div>
-    </footer>
+
+      {/* FINALE CON SOLO DUE BOTTONI */}
+      {/*
+      <div className="fixed inset-x-0 bottom-0 bg-base-100">
+        <footer className="flex items-center justify-center py-4 bg-transparent">
+          <div className="grid grid-cols-2 btn-group">
+            <button
+              className={`btn w-32 ${
+                startButtonDisabled ? "btn-disabled" : "btn-active"
+              }`}
+              onClick={handleStartListening}
+              disabled={startButtonDisabled}
+            >
+              <span className="triangle-icon text-current"></span>
+              Start
+            </button>
+            <button
+              className={`btn w-32 ${
+                stopButtonDisabled ? "btn-disabled" : "btn-active"
+              }`}
+              onClick={handleStopListening}
+              disabled={stopButtonDisabled}
+            >
+              <span className="square-icon text-current"></span>
+              Stop
+            </button>
+          </div>
+        </footer>
+      </div>
+      */}
+    </main>
   );
 }
-
-export default Button;
