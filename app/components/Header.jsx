@@ -9,7 +9,7 @@ const Header = () => {
   };
 
   return (
-    <nav className="leading-none text-2xl bg-gradient-rgba text-sky-100 p-4 z-100 fixed top-0 w-full ">
+    <nav className="leading-none text-2xl bg-gradient-rgba text-sky-100 p-4 z-40 fixed top-0 w-full ">
       <div className="container mx-auto flex justify-between items-center">
         <div className="flex items-center">
           <div className="mr-4">
@@ -25,11 +25,14 @@ const Header = () => {
           <a href="../" className="hover:drop-shadow-lg text-lg font-semibold">
             HOME
           </a>
+          <a href="../about/" className="ml-4 text-lg font-semibold">
+            ABOUT
+          </a>
           <a href="../play/" className="ml-4 text-lg font-semibold">
             RUN APP
           </a>
         </div>
-        <div className="sm:hidden">
+        <div className="sm:hidden ">
           <button
             onClick={toggleMenu}
             className="text-white focus:outline-none"
@@ -76,6 +79,13 @@ const Header = () => {
             onClick={toggleMenu}
           >
             HOME
+          </a>
+          <a
+            href="../about/"
+            className="block text-white text-lg font-semibold py-2"
+            onClick={toggleMenu}
+          >
+            ABOUT
           </a>
           <a
             href="../play/"

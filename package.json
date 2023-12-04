@@ -11,6 +11,7 @@
   "dependencies": {
     "@react-spring/parallax": "^9.7.3",
     "@syncfusion/ej2-react-inputs": "^23.1.38",
+    "annyang": "^2.6.1",
     "clsx": "^2.0.0",
     "next": "latest",
     "react": "latest",
@@ -18,6 +19,7 @@
     "react-range-slider-input": "^3.0.7"
   },
   "devDependencies": {
+    "@types/annyang": "^2.6.4",
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",

@@ -4,15 +4,22 @@ function getCurrentDimension() {
     height: window.innerHeight,
   };
 }
-/*********************** RAD PART ***********************/
+
+/*********************** variable PART ***********************/
+
 const height = getCurrentDimension().height;
 const width = getCurrentDimension().width;
 
-const minVol = 0;
-const maxVol = 50;
+const minVol = 1;
+const maxVol = 30;
+
+const minPitch = 150;
+const maxPitch = 500;
 
 const minRad = 40;
 const maxRad = 140;
+
+/*********************** rad PART ***********************/
 
 function setRad(volume) {
   if (volume <= minVol) {
@@ -25,8 +32,6 @@ function setRad(volume) {
 }
 
 /*********************** yC PART ***********************/
-const minPitch = 100;
-const maxPitch = 600;
 
 const usable_height =
   getCurrentDimension().height -
@@ -53,10 +58,17 @@ function setPosPitch(pitch) {
   );
 }
 
+/******************** VOCALI ************************ */
+function getVocali() {}
+
 // Export the functions to make them accessible in other files
 module.exports = {
   setRad,
   setPosPitch,
+  minVol,
+  maxVol,
+  minPitch,
+  maxPitch,
   minRad,
   height,
   width,

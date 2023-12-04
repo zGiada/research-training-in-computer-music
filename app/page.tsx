@@ -45,6 +45,7 @@ export default function Home() {
               Math.round((dimsFunctions.height * 45) / 100)) /
             2
           }
+          heightSpaceSun={"90vh"}
         />
         <div className="hero-content text-justify text-white">
           <div className="flex justify-center max-w-full">

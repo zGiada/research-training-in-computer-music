@@ -2,8 +2,8 @@
 import Header from "../components/Header";
 import SunSleep from "../components/sunSleep";
 import SunAwake from "../components/sunAwake";
-import Button from "../components/Button";
 import * as dimsFunctions from "../audio/setDimsValue";
+import * as vowelFunctions from "../audio/audioManager";
 import React, { useState, useEffect } from "react";
 
 export default function Play() {
@@ -35,6 +35,7 @@ export default function Play() {
     const buf = new Float32Array(buflen);
     var buffer_pitch = [];
     var buffer_vol = [];
+    var buffer_vocal = [];
     var count_sil = 0;
     const noteStrings = [
       "C",
@@ -152,13 +153,12 @@ export default function Play() {
       return Math.round(averageVolume * 100);
     }
 
-    var vocali = ["I", "E", "A", "O", "U"];
-    let vocale = vocali[Math.floor(Math.random() * vocali.length)];
     function getVowel(buf, sampleRate) {
       // donna
       var form1 = [320, 400, 620, 920, 640, 400, 360];
       var form2 = [2750, 2500, 2400, 1400, 1200, 920, 760];
-      return vocale;
+      var result = vowelFunctions.getVowel(buf, sampleRate);
+      return result;
     }
 
     const initializeAudio = () => {
@@ -203,7 +203,26 @@ export default function Play() {
       }
       return summ / ArrayLen;
     }
+    function findMostRepeatedItem(arr) {
+      let count = {};
+      let mostRepeatedItem;
+      let maxCount = 0;
 
+      for (const item of arr) {
+        if (count[item] === undefined) {
+          count[item] = 1;
+        } else {
+          count[item]++;
+        }
+
+        if (count[item] > maxCount) {
+          maxCount = count[item];
+          mostRepeatedItem = item;
+        }
+      }
+
+      return mostRepeatedItem;
+    }
     const selectColor = (vocale) => {
       if (vocale == "I") {
         setSvgColor("blue");
@@ -226,13 +245,20 @@ export default function Play() {
       analyser.getFloatTimeDomainData(buf);
       const ac = setFrequency(buf, audioContext.sampleRate);
       const vol = getStableVolume(buf);
+
       const v = getVowel(buf, audioContext.sampleRate);
+
       var MAX_BUF = 600;
-      if ((ac == -1 || ac < 100 || ac > 600) && (vol < 1 || vol > 50)) {
-        setPitch("I'm listening...");
-        setVolume("I'm listening...");
-        setNote("I'm listening...");
-        setVowel("I'm listening...");
+      if (
+        (ac == -1 ||
+          ac < dimsFunctions.minPitch ||
+          ac > dimsFunctions.maxPitch) &&
+        (vol < dimsFunctions.minVol || vol > dimsFunctions.maxVol)
+      ) {
+        setPitch("...");
+        setVolume("...");
+        setNote("...");
+        setVowel("...");
         setSunListen(false);
         setRad(dimsFunctions.minRad);
         setSvgColor("yellow");
@@ -246,6 +272,7 @@ export default function Play() {
           console.log("silence");
           buffer_pitch = [];
           buffer_vol = [];
+          buffer_vocal = [];
           count_sil = 0;
         }
       } else {
@@ -263,12 +290,29 @@ export default function Play() {
           } else {
             buffer_vol.push(vol);
           }
+          if (v != 0) {
+            if (buffer_vocal.length > MAX_BUF) {
+              buffer_vocal.shift();
+              buffer_vocal.push(v);
+            } else {
+              buffer_vocal.push(v);
+            }
+          } else {
+            // v == 0
+            if (buffer_vocal.length > MAX_BUF) {
+              buffer_vocal.shift();
+              buffer_vocal.push(findMostRepeatedItem(buffer_vocal));
+            } else {
+              buffer_vocal.push(findMostRepeatedItem(buffer_vocal));
+            }
+          }
 
           setSunListen(true);
 
           const pitchValue = Math.round(ArrayAvg(buffer_pitch));
           const yCoordValue = dimsFunctions.setPosPitch(pitchValue);
-          setPitch(pitchValue);
+          var hz = pitchValue + "Hz";
+          setPitch(hz);
           setYCoord(yCoordValue);
 
           const volValue = Math.round(ArrayAvg(buffer_vol));
@@ -279,8 +323,9 @@ export default function Play() {
           const n = noteFromPitch(pitchValue);
           setNote(noteStrings[n % 12]);
 
-          selectColor(v);
-          setVowel(v);
+          const vocalValue = findMostRepeatedItem(buffer_vocal);
+          selectColor(vocalValue);
+          setVowel(vocalValue);
         }
       }
 
@@ -292,6 +337,7 @@ export default function Play() {
     const stopListening = () => {
       buffer_pitch = [];
       buffer_vol = [];
+      buffer_vocal = [];
       count_sil = 0;
       setSunListen(false);
       setRad(dimsFunctions.minRad);
@@ -356,12 +402,28 @@ export default function Play() {
       <Header />
       <div className="absolute bg-wave flex inset-x-0 bottom-0 min-h-[30vh] text-white p-2"></div>
       {sunListen ? (
-        <SunAwake svgColor={svgColor} rad={rad} yCoordinate={yCoord} />
+        <SunAwake
+          svgColor={svgColor}
+          rad={rad}
+          yCoordinate={yCoord}
+          heightSpaceSun={"90vh"}
+        />
       ) : (
-        <SunSleep svgColor={svgColor} rad={rad} yCoordinate={yCoord} />
+        <SunSleep
+          svgColor={svgColor}
+          rad={rad}
+          yCoordinate={yCoord}
+          heightSpaceSun={"90vh"}
+        />
       )}
-
+      <div className="fixed-square z-40">
+        <p className="flex items-center">pitch: {pitch}</p>
+        <p className="flex items-center">intensity: {volume}</p>
+        <p className="flex items-center">note: {note}</p>
+        <p className="flex items-center">vowel: {vowel}</p>
+      </div>
       {/* FOOTER CON SCRITTA */}
+      {/*
       <div className="flex min-h-[10vh] p-6 bg-base-100 fixed inset-x-0 bottom-0">
         <footer className="w-full flex text-white p-2 bg-transparent fixed inset-x-0 bottom-0">
           <div className="grid grid-cols-5 gap-5">
@@ -396,8 +458,9 @@ export default function Play() {
         </footer>
       </div>
 
+      */}
       {/* FINALE CON SOLO DUE BOTTONI */}
-      {/*
+
       <div className="fixed inset-x-0 bottom-0 bg-base-100">
         <footer className="flex items-center justify-center py-4 bg-transparent">
           <div className="grid grid-cols-2 btn-group">
@@ -424,7 +487,6 @@ export default function Play() {
           </div>
         </footer>
       </div>
-      */}
     </main>
   );
 }

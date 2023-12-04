@@ -1,6 +1,6 @@
 import React from "react";
 
-const sunSleep = ({ svgColor, rad, yCoordinate }) => {
+const sunSleep = ({ svgColor, rad, yCoordinate, heightSpaceSun }) => {
   const shadowRadius = rad + (rad * 50) / 100;
 
   const eyesRadius = rad - Math.round(rad / 1.3);
@@ -32,7 +32,7 @@ const sunSleep = ({ svgColor, rad, yCoordinate }) => {
     <div className="flex-grow sun-container w-full flex items-center justify-center ">
       <svg
         width="100%" // Set the desired width of the circle
-        height="90vh" // Set the desired height of the circle
+        height={heightSpaceSun} // Set the desired height of the circle
         xmlns="http://www.w3.org/2000/svg"
       >
         <radialGradient id="shadow" cx="50%" cy="50%" r="50%">
