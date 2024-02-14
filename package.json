@@ -1,0 +1,38 @@
+{
+  "name": "soundrise",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "export": "next build && next export"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.5.1",
+    "@fortawesome/free-brands-svg-icons": "^6.5.1",
+    "@fortawesome/react-fontawesome": "^0.2.0",
+    "@react-spring/parallax": "^9.7.3",
+    "@syncfusion/ej2-react-inputs": "^23.1.38",
+    "annyang": "^2.6.1",
+    "clsx": "^2.0.0",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-range-slider-input": "^3.0.7"
+  },
+  "devDependencies": {
+    "@types/annyang": "^2.6.4",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "autoprefixer": "latest",
+    "daisyui": "^3.8.2",
+    "eslint": "latest",
+    "eslint-config-next": "latest",
+    "next": "^14.1.0",
+    "postcss": "latest",
+    "tailwindcss": "latest",
+    "typescript": "latest"
+  }
+}

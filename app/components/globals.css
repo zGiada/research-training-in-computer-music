@@ -1,0 +1,163 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-color: 150, 219, 220;
+  --background-start-rgb: 150, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+/*
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+*/
+body {
+  color: rgb(var(--foreground-rgb));
+  /*
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+    */
+  /*
+  background-image: url("../../public/bg.jpg");
+  background-size: cover;*/
+  background: rgb(15, 109, 199);
+}
+
+.main-page {
+  background-image: url("../../public/bg.jpg");
+  background-size: cover;
+  /*background: rgb(15, 56, 91);*/
+}
+.start-page {
+  background: linear-gradient(rgb(6, 51, 94), rgb(15, 109, 199));
+  background: linear-gradient(
+    #58151a,
+    #bc2909,
+    #ba6d09,
+    #71a8ee,
+    #3072eb,
+    rgb(15, 109, 199)
+  );
+}
+.navbar {
+  background-color: transparent;
+
+  /*
+  background: rgb(255, 255, 255);
+  background: linear-gradient(to top, transparent, rgba(26, 54, 139, 0.9))
+    rgba(72, 160, 236, 0.05);*/
+}
+
+.logo {
+  width: 25%;
+}
+
+.grid-container {
+  background-color: blue;
+  display: grid;
+  justify-content: space-evenly;
+}
+
+.bg-wave {
+  background-image: url("../../public/wave.svg");
+  background-repeat: repeat-x;
+  background-position: 40% bottom;
+  /* animation: wave-animation 10s infinite linear;*/
+}
+/*
+@keyframes wave-animation {
+  0% {
+    background-position: 0 bottom;
+  }
+  100% {
+    background-position: 100% bottom;
+  }
+}
+*/
+/* Add styles to your component's CSS file */
+.github-icon {
+  color: whitesmoke; /* Change the color as needed */
+  font-size: 26px; /* Change the size as needed */
+  /* Add other styles as needed */
+}
+.fixed-square {
+  position: fixed;
+  bottom: 45vh;
+  right: 2vh;
+  height: auto;
+  padding: 0.5%;
+  /*
+  border: 1px solid #b8d5e9;
+  background-color: #b8d5e9;
+  color: #131386;
+  */
+  font-size: 1rem;
+  color: #b8d5e9;
+  text-align: right;
+  font-weight: bold;
+}
+
+.fixed-square p {
+  margin-top: 5%;
+  width: 100%;
+}
+
+.bg-gradient-rgba {
+  background-image: linear-gradient(
+    to bottom,
+    rgb(35, 35, 199),
+    rgba(35, 35, 199, 0.5),
+    /* 52, 122, 217 */ rgba(52, 122, 217, 0.01)
+  );
+}
+/*
+rgba(69, 174, 235, 0.01),
+    rgba(17, 17, 138, 0.397)
+*/
+
+.bg-gradient-card {
+  background-image: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0.75)
+  );
+}
+
+.bg-gradient-sky {
+  background-image: radial-gradient(
+    at bottom,
+    rgb(69, 174, 235),
+    rgb(35, 35, 199)
+  );
+}
+
+.triangle-icon::before {
+  content: "";
+  width: 0;
+  height: 0;
+  border-bottom: 7px solid transparent;
+  border-top: 7px solid transparent;
+  border-left: 14px solid currentColor; /* You can adjust the size */
+  display: inline-block;
+  margin-right: 0.5em; /* Adjust the spacing between the icon and text */
+}
+
+.square-icon::before {
+  content: "";
+  width: 14px; /* Adjust the size of the square */
+  height: 14px; /* Adjust the size of the square */
+  display: inline-block;
+  margin-right: 8px; /* Adjust the spacing between the icon and text */
+  background-color: currentColor; /* Icon color */
+}
