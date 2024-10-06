@@ -31,9 +31,60 @@ Stiamo testando l'usabilità dell'applicazione e vorremmo il tuo feedback! Per p
 - **Next.js:** framework JavaScript back-end per applicazioni React, e consente il rendering automatico lato server.
 - **Firebase:** Utilizzato per il deploy e l'hosting dell'applicazione.
 
-## Getting Started
+## Developers... Getting Started!
 
-Run the development server with:
+Prima di avviare l'applicazione, assicurati di avere installato le seguenti dipendenze:
+
+- **Node.js** (versione >= 14)  
+  Puoi scaricarlo da [Node.js](https://nodejs.org/).
+- **npm** (viene installato insieme a Node.js)  
+  Oppure, in alternativa, puoi usare **yarn** o **pnpm**.
+
+Verifica se Node.js e npm sono installati correttamente eseguendo questi comandi nel terminale:
+
+```bash
+node -v
+npm -v
+```
+
+Se vuoi usare yarn o pnpm:
+
+- **Yarn** or **Pnpm**
+  Puoi installarlo globalmente eseguendo:
+
+```bash
+npm install -g yarn
+# or
+npm install -g pnpm
+```
+
+## Installazione
+
+Dopo aver installato Node.js e npm (o yarn/pnpm), segui questi passaggi per avviare l'applicazione:
+
+1. Clona la repository:
+
+```bash
+git clone https://github.com/zGiada/research-training-in-computer-music.git
+```
+
+2. Entra nella directory del progetto:
+
+```bash
+cd research-training-in-computer-music
+```
+
+3. Installa le dipendenze:
+
+```bash
+npm install
+# or
+yarn install
+# or
+pnpm install
+```
+
+4. Avvia il server di sviluppo:
 
 ```bash
 npm run dev
@@ -41,8 +92,20 @@ npm run dev
 yarn dev
 # or
 pnpm dev
-# or
-bun dev
 ```
 
-Open http://localhost:3000 with your browser to see the result.
+5. Apri http://localhost:3000 nel tuo browser per visualizzare l'applicazione.
+
+## Licenza
+
+Questo progetto è distribuito sotto la licenza **GNU General Public License v3.0**. Per maggiori informazioni, consulta il testo completo della licenza disponibile al seguente link:  
+[GNU General Public License v3.0](https://www.gnu.org/licenses/gpl-3.0.txt)
+
+## Contatti
+
+Per ulteriori informazioni o domande sul progetto, puoi contattare:
+
+- **Dott.ssa Giada Zuccolo**: [zuccologia@dei.unipd.it](mailto:zuccologia@dei.unipd.it)
+- **Dott. Andrea Franceschini**: [andrea.franceschini@dei.unipd.it](mailto:andrea.franceschini@dei.unipd.it)
+- **Dott. Alessandro Fiordelmondo**: [fiordelmondo@dei.unipd.it](mailto:fiordelmondo@dei.unipd.it)
+- **Prof. Sergio Canazza**: [canazza@dei.unipd.it](mailto:canazza@dei.unipd.it)

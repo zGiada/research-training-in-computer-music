@@ -12,7 +12,7 @@ import Link from "next/link";
 import SunAwake from "./components/sunAwake";
 import { Parallax, ParallaxLayer } from "@react-spring/parallax";
 
-const widthSun = Math.round((dimsFunctions.width * 25) / 100);
+const widthSun = Math.round((dimsFunctions.width * 30) / 100);
 
 export default function Home() {
   return (
