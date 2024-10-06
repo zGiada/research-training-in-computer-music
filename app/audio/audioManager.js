@@ -6,8 +6,8 @@ var form = [];
 
 // Formanti donna per I, é, È, A, O, ó, U
 // I valori a margine (primo e ultimo) sono inesistenti: servono solo per agevolare il calcolo dei range nell'algoritmo
-var form1 = [120, 320, 400, 620, 920, 640, 400, 360, 150];
-var form2 = [2900, 2750, 2500, 2400, 1400, 1200, 920, 760, 580];
+var form1 = [120, 200, 337, 522, 773, 542, 342, 308, 150];
+var form2 = [2900, 3200, 2512, 2400, 1392, 1195, 920, 762, 580];
 
 var vocali = ["I", "E", "E", "A", "O", "O", "U"];
 var signal;
@@ -15,14 +15,27 @@ var signal;
 function getVowel(s, sampleRate) {
   signal = s;
   f0 = sampleRate;
+
+  // Applica un filtro pre-elaborazione per ridurre il rumore
+  signal = preProcessSignal(signal);
+
+  // Step di autocorrelazione e calcolo delle radici
   let R = autocorrelation();
   let lpc = durbin(R);
-
   let roots = durand(lpc);
-
   let valid = formants(roots, f1);
+
+  // Confronto formanti con i range corretti
   form = compare(valid);
   return form[0];
+}
+
+function preProcessSignal(s) {
+  // Esempio di filtro passa-basso per rimuovere il rumore ad alta frequenza
+  const filteredSignal = s.map((sample, i) => {
+    return sample * Math.exp(-0.002 * i); // Filtro semplice per attenuare
+  });
+  return filteredSignal;
 }
 
 function autocorrelation() {
@@ -32,7 +45,6 @@ function autocorrelation() {
   for (var k = 0; k <= p; k++) {
     R[k] = 0;
     for (var m = 0; m <= N - 1 - k; m++) {
-      //R[k] += signal[m] * signal[m + k];
       R[k] += efficientUs(m) * efficientUs(m + k);
     }
   }
@@ -47,7 +59,6 @@ let usx;
 function efficientUs(i) {
   if (usx[i] == 0) {
     let ratio = f0 / f1;
-
     usx[i] = 0;
     let index = Math.floor(i * ratio);
 
@@ -65,7 +76,6 @@ function durbin(R) {
   let k = [];
   let E = R[0];
 
-  // Passi iterativi
   for (let i = 1; i <= p; i++) {
     k[i] = R[i];
     for (let j = 1; j <= i - 1; j++) {
@@ -80,21 +90,16 @@ function durbin(R) {
     E = (1 - k[i] * k[i]) * E;
   }
 
-  // Stime finali dei coefficienti da restituire
   for (let i = 0; i < p; i++) {
     lpc[i + 1] = -alpha[i + 1][p];
   }
   lpc[0] = 1;
   return lpc;
-  //console.log(JSON.stringify(lpc).slice(1, -1));
 }
 
-// Metodo di Durand-Kerner
 function durand(cf) {
-  const deg = cf.length - 1; // Grado del polinomio
-  const n = 8; // Numero di iterazioni
-
-  // Inizializzazione dalle radici dell'unità
+  const deg = cf.length - 1;
+  const n = 8;
   var roots = [];
   for (let i = 0; i < deg; i++) {
     const theta = (2 * Math.PI * i) / deg;
@@ -105,7 +110,6 @@ function durand(cf) {
   for (let i = 0; i < n; i++) {
     var preroots = roots;
     for (let j = 0; j < deg; j++) {
-      // Valutazione del polinomio con regola di Horner
       var p = { real: cf[0], imag: 0 };
       for (let k = 1; k <= deg; k++) {
         p = sumc(mulc(p, preroots[j]), { real: cf[k], imag: 0 });
@@ -124,7 +128,6 @@ function durand(cf) {
   return roots;
 }
 
-// Funzioni aritmetiche per i numeri complessi
 function sumc(a, b) {
   return { real: a.real + b.real, imag: a.imag + b.imag };
 }
@@ -151,9 +154,6 @@ function divc(a, b) {
 function formants(roots, fs) {
   let ff = [];
   for (let i = 0; i < roots.length; i++) {
-    // Larghezza di banda
-    //let b = -fs * Math.log(Math.sqrt((roots[i].real ** 2) + (roots[i].imag ** 2))) / Math.PI;
-
     let f = (fs * Math.atan2(roots[i].imag, roots[i].real)) / (2 * Math.PI);
     let b =
       (-fs * Math.log(Math.sqrt(roots[i].real ** 2 + roots[i].imag ** 2))) /
@@ -164,8 +164,6 @@ function formants(roots, fs) {
   }
   ff.sort((a, b) => a.freq - b.freq);
 
-  // Estrazione delle formanti valide
-  //console.log(ff);
   let valid = [0];
   let j = 0;
   let minval = [200, 700];
@@ -184,25 +182,17 @@ function compare(valid) {
   if (valid.length == 0) {
     valid[0] = valid[1] = valid[2] = valid[3] = valid[4] = valid[5] = 0;
   } else {
-    // Riconoscimento della vocale
-
     if (valid[2] != null) {
       let i;
       for (i = 1; i <= 7; i++) {
         let max = form2[i - 1] - (form2[i - 1] - form2[i]) / 2;
         let min = form2[i + 1] + (form2[i] - form2[i + 1]) / 2;
         if (valid[2].freq > min && valid[2].freq < max) {
-          //console.log(vocali[i - 1]);
-          //valid[0] = vocali[i - 1];
-
           let max1 = form1[i] + 200;
           let min1 = form1[i] - 200;
-          //console.log(valid[1].freq + ' --> ' + min1 + ' --- ' + form1[i] + ' --- ' + max1);
           if (!(valid[1].freq > min1 && valid[1].freq < max1)) {
-            //console.log('ok: ' + vocali[i - 1]);
             i = 8;
           }
-
           break;
         }
       }

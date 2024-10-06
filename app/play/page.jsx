@@ -7,18 +7,12 @@ import * as vowelFunctions from "../audio/audioManager";
 import React, { useState, useEffect } from "react";
 
 export default function Play() {
-  // console.log(getCurrentDimension().width + " " + getCurrentDimension().height);
-  //var svgColor = "yellow";
   const [svgColor, setSvgColor] = useState("yellow");
-  // var rad = dimsFunctions.minRad;
   const [rad, setRad] = useState(dimsFunctions.minRad);
 
-  var yCoordinate = 0;
   const [yCoord, setYCoord] = useState(
-    (dimsFunctions.height - Math.round((dimsFunctions.height * 30) / 100)) / 2
+    (dimsFunctions.height - Math.round((dimsFunctions.height * 35) / 100)) / 2
   );
-  // alert(yCoord);
-  // (dimsFunctions.height - Math.round((dimsFunctions.height * 30) / 100)) / 2;
 
   const [sunListen, setSunListen] = useState(false);
   const [isListening, setIsListening] = useState(false);
@@ -163,38 +157,68 @@ export default function Play() {
     }
 
     const initializeAudio = () => {
-      audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      audioContext = new (window.AudioContext || window.webkitAudioContext)({
+        latencyHint: "interactive", // Riduci la latenza
+        sampleRate: 44100, // Campionamento standard
+      });
+
       navigator.mediaDevices
         .getUserMedia({
           audio: {
+            sampleRate: 44100, // Forza un campionamento più basso
             echoCancellation: true,
             noiseSuppression: true,
             autoGainControl: true,
-            highpassFilter: true,
           },
         })
         .then((stream) => {
           mediaStreamSource = audioContext.createMediaStreamSource(stream);
 
-          // Create DynamicsCompressor and get the reduction value
+          // Filtro passa-alto
+          const highpassFilter = audioContext.createBiquadFilter();
+          highpassFilter.type = "highpass";
+          highpassFilter.frequency.value = 200;
+
+          // Filtro passa-basso
+          const lowpassFilter = audioContext.createBiquadFilter();
+          lowpassFilter.type = "lowpass";
+          lowpassFilter.frequency.value = 3000;
+
+          // Filtro band-pass
+          const bandpassFilter = audioContext.createBiquadFilter();
+          bandpassFilter.type = "bandpass";
+          bandpassFilter.frequency.value = 1000;
+          bandpassFilter.Q.value = 0.7;
+
+          // Compressore dinamico
           const compressor = audioContext.createDynamicsCompressor();
           compressor.threshold.value = -50;
           compressor.knee.value = 40;
-          compressor.ratio.value = 12;
-          compressor.attack.value = 0;
-          compressor.release.value = 0.25;
+          compressor.ratio.value = 4;
 
-          compressor.reduction; // Just to avoid a warning, value is not used
+          // Gain
+          const gainNode = audioContext.createGain();
+          gainNode.gain.value = 1.5;
 
+          // Analizzatore con dimensione FFT ridotta
           analyser = audioContext.createAnalyser();
-          analyser.fftSize = 2048;
-          mediaStreamSource.connect(analyser);
+          analyser.fftSize = 1024; // FFT ridotta per maggiore velocità
+
+          // Collegamenti
+          mediaStreamSource.connect(highpassFilter);
+          highpassFilter.connect(lowpassFilter);
+          lowpassFilter.connect(bandpassFilter);
+          bandpassFilter.connect(compressor);
+          compressor.connect(gainNode);
+          gainNode.connect(analyser);
+
           startListening();
         })
         .catch((err) => {
           console.error(`${err.name}: ${err.message}`);
         });
     };
+
     function ArrayAvg(myArray) {
       var i = 0,
         summ = 0,
@@ -244,9 +268,9 @@ export default function Play() {
       }
 
       analyser.getFloatTimeDomainData(buf);
+
       const ac = setFrequency(buf, audioContext.sampleRate);
       const vol = getStableVolume(buf);
-
       const v = getVowel(buf, audioContext.sampleRate);
 
       var MAX_BUF = 600;
@@ -277,7 +301,14 @@ export default function Play() {
           count_sil = 0;
         }
       } else {
-        if (ac != -1 && ac >= 100 && ac <= 600 && vol > 0 && vol <= 50) {
+        if (
+          ac != -1 &&
+          ac >= 100 &&
+          ac <= 600 &&
+          vol > 0 &&
+          vol <= 50 &&
+          v != 0
+        ) {
           if (buffer_pitch.length > MAX_BUF) {
             buffer_pitch.shift();
             buffer_pitch.push(ac);
@@ -399,9 +430,10 @@ export default function Play() {
   };
 
   return (
-    <main className="flex max-h-screen flex-col items-center ">
+    <main className="relative flex max-h-screen flex-col items-center ">
       <Header />
-      <div className="absolute bg-wave min-h-[50vh] bottom-0 flex inset-x-0 text-white p-2"></div>
+      <div className="absolute bg-wave min-h-[35vh] bott-wave bottom-0 flex inset-x-0 text-white p-2"></div>
+
       {sunListen ? (
         <SunAwake
           svgColor={svgColor}

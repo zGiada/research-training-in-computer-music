@@ -68,12 +68,56 @@ body {
   justify-content: space-evenly;
 }
 
+.image-settings {
+  margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+  .bott-wave {
+    bottom: 2.5rem; /* 10 * 0.25rem = 2.5rem */
+  }
+  .text-small {
+    font-size: 1rem; /* 12 * 0.0625rem = 0.75rem */
+  }
+  .title-settings {
+    font-size: 1.5rem; /* 24 * 0.0625rem = 1.5rem */
+    margin-top: -2.9rem;
+  }
+  .text-small-desc {
+    font-size: 0.9rem; /* 16 * 0.0625rem = 1rem */
+  }
+  .image-settings {
+    width: 50%; /* 16 * 0.25rem = 4rem */
+  }
+  .btn-prova {
+    font-size: 0.9rem; /* 16 * 0.0625rem = 1rem */
+  }
+}
+
+.little-menu {
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0; /* Spazio attorno all'icona */
+}
+
+.btn-prova {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  text-transform: uppercase;
+  width: 80%;
+  margin: 3% 10%;
+  background-color: #200f65; /* Colore di sfondo per il bottone "Gioca" */
+  color: white;
+}
+
 .bg-wave {
   background-image: url("../../public/wave.svg");
   background-repeat: repeat-x;
   background-position: 40% bottom;
   /* animation: wave-animation 10s infinite linear;*/
 }
+
 /*
 @keyframes wave-animation {
   0% {

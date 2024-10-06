@@ -8,8 +8,11 @@ import sunAwake from "./components/sunAwake";
 import Button from "./components/Button";
 
 import Image from "next/image";
+import Link from "next/link";
 import SunAwake from "./components/sunAwake";
 import { Parallax, ParallaxLayer } from "@react-spring/parallax";
+
+const widthSun = Math.round((dimsFunctions.width * 25) / 100);
 
 export default function Home() {
   return (
@@ -19,17 +22,52 @@ export default function Home() {
       <div className="hero min-h-screen min-w-screen">
         <div className="hero-content text-center text-white">
           <div className="max-w-full">
-            <h1 className="font-extrabold mb-10 leading-none tracking-tight text-3xl sm:text-md md:text-3xl lg:text-4xl xl:text-5xl">
-              A New Sunrise for Speech Therapy: <br />
-              Development of SoundRise 2.0 Application
+            <h1 className="font-extrabold mb-5 leading-none tracking-tight text-3xl title-settings">
+              A New Sunrise for Speech Therapy: Development of{" "}
+              <span className="text-yellow-500"> SoundRise 2.0 </span>
+              Application
             </h1>
-            <Image
-              src="/soundRise-scritta.svg"
-              alt="Your image"
-              width={350}
-              height={100}
-              style={{ margin: "0 auto" }}
-            />
+            <p className="mb-10 leading-none tracking-tight text-small-desc text-lg">
+              SoundRise &eacute; un&apos;applicazione educativa con lo scopo di
+              aiutare persone, in particolar modo bambini e adolescenti, nel
+              loro percorso di apprendimento vocale. Pensata per essere
+              utilizzata come supporto aggiuntivo a un percorso di logopedia per
+              giovani pazienti con difficolt&agrave; uditive e di comunicazione,
+              unisce il mondo della tecnologia ed educazione, con un occhio di
+              riguardo all&apos;inclusivit&agrave;.
+              <br />
+              <br />
+              Un simpatico sole rappresenta le caratteristiche tonali e
+              timbriche della voce dell&apos;utente. Quando viene emesso un
+              vocalizzo, il sole si sveglia e sorride, e, in base
+              all&apos;altezza della nota, all&apos;intensit&agrave; e al
+              timbro, cambia la sua posizione verticale, la sua dimensione e il
+              suo colore, tutto in tempo reale. Questo sistema visivo aiuta a
+              comprendere come funziona la propria voce.
+            </p>
+            <h2 className="btn-prova">
+              PROVALA ANCHE TU! <br />
+              Dal men&ugrave; in alto a destra{" "}
+              <span className="inline align-middle mx-1 md:hidden">
+                (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="little-menu h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 6h16M4 12h16m-7 6h7"
+                  />
+                </svg>
+                )
+              </span>
+              Clicca &ldquo;RUN APP&rdquo;
+            </h2>
           </div>
         </div>
       </div>
@@ -37,30 +75,23 @@ export default function Home() {
       <div className="bg-wave fixed bottom-10 flex inset-x-0 min-h-[30vh] text-white p-2"></div>
 
       <div className="hero min-h-screen min-w-screen">
+        <Image
+          src="/soundRise-scritta.svg"
+          alt="Your image"
+          width={widthSun}
+          height={widthSun}
+        />
+
         <SunAwake
           svgColor={"yellow"}
-          rad={dimsFunctions.minRad}
+          rad={dimsFunctions.minRad * 1.5}
           yCoordinate={
             (dimsFunctions.height -
-              Math.round((dimsFunctions.height * 45) / 100)) /
+              Math.round((dimsFunctions.height * 55) / 100)) /
             2
           }
           heightSpaceSun={"90vh"}
         />
-        <div className="hero-content text-justify text-white">
-          <div className="flex justify-center max-w-full">
-            <p className="mb-20 max-w-[70%] leading-none tracking-tight text-xl">
-              SoundRise 2.0 is an application developed in <b>React</b>,
-              designed to help individuals with{" "}
-              <b>communication difficulties</b>, in particular children. <br />
-              The application features an intuitive and inclusive interface that
-              allows the user to practise speech therapy voice exercises
-              independently: a sun symbolising the voice of the user, which is
-              animated according to the tonal and timbral features of the voice
-              itself.
-            </p>
-          </div>
-        </div>
       </div>
 
       <div className="flex min-h-[7vh] p-6 bg-base-100 fixed inset-x-0 bottom-0">

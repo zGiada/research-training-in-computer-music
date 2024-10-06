@@ -19,13 +19,13 @@ const height = getCurrentDimension().height;
 const width = getCurrentDimension().width;
 
 const minVol = 2;
-const maxVol = 50;
+const maxVol = 100;
 
 const minPitch = 150;
 const maxPitch = 500;
 
-const minRad = 40;
-const maxRad = 140;
+const minRad = 25;
+const maxRad = 200;
 
 /*********************** rad PART ***********************/
 
