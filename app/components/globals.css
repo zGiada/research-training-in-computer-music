@@ -72,27 +72,71 @@ body {
   margin: 0 auto;
 }
 
-@media (max-width: 640px) {
-  .bott-wave {
-    bottom: 2.5rem; /* 10 * 0.25rem = 2.5rem */
-  }
-  .text-small {
-    font-size: 1rem; /* 12 * 0.0625rem = 0.75rem */
-  }
-  .title-settings {
-    font-size: 1.5rem; /* 24 * 0.0625rem = 1.5rem */
-    margin-top: -2.9rem;
-  }
-  .text-small-desc {
-    font-size: 0.9rem; /* 16 * 0.0625rem = 1rem */
-  }
-  .image-settings {
-    width: 50%; /* 16 * 0.25rem = 4rem */
-  }
-  .btn-prova {
-    font-size: 0.9rem; /* 16 * 0.0625rem = 1rem */
+.big-title{
+  font-size: 2.5rem;
+  line-height: normal;
+}
+
+.card-container{
+  margin-top: 5%;
+}
+
+@media (min-width: 640px) {
+  .big-title span.divisore::after {
+    content: '';display: block; /* Simula un'interruzione di riga */  
+  }  
+}
+
+@media (max-width: 800px) {
+  .big-title {
+    font-size: 1.75rem;
   }
 }
+
+.text-small-desc{
+  font-size: 1.2rem;
+  width: 65%;
+  margin: 2% auto 0 auto;
+  text-align: justify;
+}
+
+.card-body, .card-title{
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .card-container{
+    margin-top: 20%;
+  }
+
+  .text-small-desc {
+    font-size: 0.9rem;
+    width: 90%;
+    margin: 1% auto 0 auto;
+  }
+
+  .card-body, .card-title{
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .big-title {
+    font-size: 1.5rem;
+    margin: 0.5rem 0;
+  }
+  .title-settings {
+    font-size: 1.25rem;
+  }
+  .bg-wave {
+    height: 300px; /* Aumenta per coprire di più su mobile */
+    bottom: 0; /* Fissa in basso */
+  }
+  .hero-content {
+    padding-bottom: 2rem; /* Riduci il padding */
+  }
+}
+
 
 .little-menu {
   display: inline-block;
@@ -101,20 +145,17 @@ body {
 }
 
 .btn-prova {
-  padding: 0.75rem 1.5rem;
   border-radius: 0.5rem;
   border: none;
-  text-transform: uppercase;
-  width: 80%;
-  margin: 3% 10%;
-  background-color: #200f65; /* Colore di sfondo per il bottone "Gioca" */
+  width: 90%;
+  margin: 1% 5%;
   color: white;
 }
 
 .bg-wave {
   background-image: url("../../public/wave.svg");
   background-repeat: repeat-x;
-  background-position: 40% bottom;
+  background-position: bottom;
   /* animation: wave-animation 10s infinite linear;*/
 }
 

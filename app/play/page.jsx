@@ -430,9 +430,11 @@ export default function Play() {
   };
 
   return (
-    <main className="relative flex max-h-screen flex-col items-center ">
-      <Header />
-      <div className="absolute bg-wave min-h-[35vh] bott-wave bottom-0 flex inset-x-0 text-white p-2"></div>
+    <main className="flex h-screen flex-col text-neutral-content relative">
+  {/* Header */}
+  <Header />
+ {/* Background Wave */}
+      <div className="bg-wave absolute bottom-0 w-full min-h-[60vh]"></div>
 
       {sunListen ? (
         <SunAwake
@@ -468,10 +470,8 @@ export default function Play() {
         </p>
       </div>
 
-      {/* FINALE CON SOLO DUE BOTTONI */}
-
       <div className="fixed inset-x-0 bg-base-100 bottom-0">
-        <footer className="flex items-center justify-center py-2 bg-transparent">
+      <footer className="w-full flex justify-center text-white p-3 bg-black z-10">
           <div className="grid  grid-cols-2 btn-group">
             <button
               className={`btn w-32 ${
